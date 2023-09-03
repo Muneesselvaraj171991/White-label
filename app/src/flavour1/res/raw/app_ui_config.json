@@ -1,0 +1,27 @@
+{
+
+  "themeColor": {
+    "primary": "#F44334",
+    "secondary": "#F44334",
+    "tertiary": "#F44334"
+  },
+  "mainScreen": {
+    "bgColor": "#3F51B5",
+    "currentWeatherBanner": {
+      "views": [
+        {
+          "gravity": "Jane Doe",
+          "size": 48,
+          "color": "0xFFF44336"
+        },
+        {
+          "gravity": "Jane Doe",
+          "size": 48,
+          "color": "0xFFF44336"
+        }
+      ]
+
+    }
+  }
+
+}

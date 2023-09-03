@@ -1,0 +1,62 @@
+{
+  "theme": {
+    "light": {
+      "primary": "#F44334",
+      "secondary": "#F44334",
+      "tertiary": "#F44334",
+      "textColor": "#F44334",
+      "h1TextSize": 44,
+      "h2TextSize": 24,
+      "normalTextSize": 16
+
+    },
+    "dark" : {
+      "primary": "#F44334",
+      "secondary": "#F44334",
+      "tertiary": "#F44334",
+      "textColor": "#F44334",
+      "h1TextSize": 44,
+      "h2TextSize": 24,
+      "normalTextSize": 16
+    }
+  },
+  "mainScreen": {
+
+    "drawables": {
+      "bgImage": {
+        "drawableType": "drawable",
+        "snowImageSrc": "",
+        "cloudImageSrc": "",
+        "rainImageSrc": "",
+        "sunnyImageSrc": "",
+        "thunderImageSrc": ""
+      } ,
+      "icons": {
+        "drawableType": "drawable",
+        "snowImageSrc": "",
+        "cloudImageSrc": "",
+        "rainImageSrc": "",
+        "sunnyImageSrc": "",
+        "thunderImageSrc": ""
+
+      }
+    },
+    "banners": [
+        {
+          "type": "current_weather",
+          "bgColor": "#F44336"
+        },
+        {
+          "type": "prediction_list",
+          "bgColor": "#F44336"
+
+        },
+      {
+        "type": "day_prediction",
+        "bgColor": "#F44336"
+
+      }
+      ]
+
+    }
+}
