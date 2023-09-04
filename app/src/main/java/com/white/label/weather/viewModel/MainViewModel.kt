@@ -16,6 +16,7 @@ import kotlinx.coroutines.launch
 class MainViewModel: ViewModel() {
     private val mRemoteCall: RemoteCall = RemoteCall.remoteCallInstance
      var uiComposeLivedata: MutableLiveData<UiCompose> = MutableLiveData()
+    var webApiLiveData: MutableLiveData<Weather> = MutableLiveData()
 
     fun parseJsonUi(response: String){
         viewModelScope.launch {
@@ -31,9 +32,11 @@ class MainViewModel: ViewModel() {
 
             mRemoteCall.weatherApi(object : RemoteCall.Result {
                 override fun onResponse(weather: Weather) {
+                    webApiLiveData.value = weather
                 }
 
                 override fun onFailure() {
+
                 }
 
             }, latitude, longitude)
