@@ -12,9 +12,7 @@ import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.darkColorScheme
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
@@ -118,7 +116,7 @@ class MainActivity : ComponentActivity() {
                             )
                     ) {
 
-                        if(isSystemInDarkTheme()) {
+                        if (isSystemInDarkTheme()) {
                             h1TextSize = darkH1TextSize.sp
                             h2TextSize = darkH2TextSize.sp
                             normalTextSize = darkNormalTextSize.sp

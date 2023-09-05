@@ -12,7 +12,6 @@ import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
 import java.util.Locale
-import kotlin.jvm.Throws
 
 
 class AppUtil {
@@ -134,27 +133,27 @@ class AppUtil {
 
         @Throws(IllegalArgumentException::class)
         fun getColor(myColorString: String): Color {
-                if (myColorString.isNotEmpty()) {
-                    return Color(myColorString.toColorInt())
-                } else {
-                    throw IllegalArgumentException("Invalid color code, App needs valid color code")
+            if (myColorString.isNotEmpty()) {
+                return Color(myColorString.toColorInt())
+            } else {
+                throw IllegalArgumentException("Invalid color code, App needs valid color code")
 
-                }
+            }
         }
 
         @Throws(IllegalArgumentException::class)
         fun getImageId(imageName: String): Int {
-                if (imageName.isNotEmpty()) {
-                    return MainApplication.appContext.resources.getIdentifier(
-                        "drawable/$imageName",
-                        null,
-                        MainApplication.appContext.packageName
-                    )
-                } else {
-                    throw IllegalArgumentException("Image resource should not be empty")
+            if (imageName.isNotEmpty()) {
+                return MainApplication.appContext.resources.getIdentifier(
+                    "drawable/$imageName",
+                    null,
+                    MainApplication.appContext.packageName
+                )
+            } else {
+                throw IllegalArgumentException("Image resource should not be empty")
 
-                }
-                   }
+            }
+        }
 
         fun getDay(dateStr: String): String {
             var date: Date

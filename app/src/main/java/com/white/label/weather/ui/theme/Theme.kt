@@ -13,13 +13,14 @@ import com.example.white_label.ui.theme.MyTypography
 
 
 @Composable
-fun MyApplicationTheme(lightThemeColor: ColorScheme, darThemeColor: ColorScheme,
+fun MyApplicationTheme(
+    lightThemeColor: ColorScheme, darThemeColor: ColorScheme,
     darkTheme: Boolean = isSystemInDarkTheme(),
     // Dynamic color is available on Android 12+
     dynamicColor: Boolean = true,
     content: @Composable () -> Unit
 ) {
-    val colorScheme = if(darkTheme)  darThemeColor else  lightThemeColor
+    val colorScheme = if (darkTheme) darThemeColor else lightThemeColor
 
     val view = LocalView.current
     if (!view.isInEditMode) {

@@ -26,7 +26,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
 import com.example.white_label.R
-import com.white.label.weather.ui.theme.darkTextColor
 import com.white.label.weather.ui.theme.h2TextSize
 import com.white.label.weather.ui.theme.normalTextSize
 import com.white.label.weather.ui.theme.textColor

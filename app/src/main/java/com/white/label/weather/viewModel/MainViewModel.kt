@@ -1,7 +1,7 @@
 package com.white.label.weather.viewModel
 
-import android.annotation.SuppressLint
 import android.app.Application
+import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
@@ -43,16 +43,19 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     var currentWeatherCodeLiveData: MutableLiveData<Int> = MutableLiveData(0)
 
 
-    @SuppressLint("SuspiciousIndentation")
+    /**
+     * Decided to parse JsonUI api in ViewModel, just to avoid re-parsing the same data on configuration change.
+     */
     fun parseJsonUi(response: String) {
         viewModelScope.async(Dispatchers.IO) {
-            val gson = Gson()
-            val uiCompose = gson.fromJson(response, UiCompose::class.java)
+            try {
+                val gson = Gson()
+                val uiCompose = gson.fromJson(response, UiCompose::class.java)
 
                 //parse the theme
                 uiCompose.theme?.light.let {
                     val lightTheme = uiCompose!!.theme?.light
-                    if(lightTheme!=null) {
+                    if (lightTheme != null) {
                         lightPrimaryColor = AppUtil.getColor(lightTheme.primary)
                         lightSecondaryColor = AppUtil.getColor(lightTheme.secondary)
                         lightTertiaryColor = AppUtil.getColor(lightTheme.tertiary)
@@ -66,7 +69,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
                 uiCompose.theme?.dark.let {
 
                     val darkTheme = uiCompose.theme?.dark
-                    if(darkTheme != null) {
+                    if (darkTheme != null) {
                         darkPrimaryColor = AppUtil.getColor(darkTheme.primary)
                         darkSecondaryColor = AppUtil.getColor(darkTheme.secondary)
                         darkTertiaryColor = AppUtil.getColor(darkTheme.tertiary)
@@ -138,7 +141,9 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
 
                 uiComposeLivedata.postValue(uiCompose)
 
-
+            } catch (th: Throwable) {
+                Log.d("Exception is caught while parsing Json api", th.toString())
+            }
 
         }
 
