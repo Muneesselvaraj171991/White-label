@@ -11,11 +11,11 @@ data class Banner(
     private val type: String = "",
     val title: String? = ""
 ) {
-    val backgroundColor: Color =
-        if (bgColor == "Transparent") Color.Transparent else Color(bgColor.toColorInt())
 
     fun getBannerUnit(): BannerUnit {
         if (type.isEmpty() && !isValidBannerType(type)) throw IllegalArgumentException("Banner type should not be empty") else {
+            val backgroundColor: Color =
+                if (bgColor == "Transparent") Color.Transparent else Color(bgColor.toColorInt())
 
             val bannerWeight: Float = when {
                 (type == BANNER_TYPE_PREDICTION_LIST) -> 2f
@@ -25,7 +25,7 @@ data class Banner(
                     0f
                 }
             }
-            return BannerUnit(type, bannerWeight)
+            return BannerUnit(type, bannerWeight, backgroundColor)
         }
     }
 

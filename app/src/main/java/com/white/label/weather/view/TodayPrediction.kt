@@ -13,6 +13,7 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -21,6 +22,7 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -38,6 +40,9 @@ import com.white.label.weather.viewModel.MainViewModel
 fun DayPredictionScreen(viewModel: MainViewModel, bgColor: Color, bannerTitle: String) {
     Card(
         shape = RoundedCornerShape(8.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = bgColor,
+        ),
         modifier = Modifier
             .fillMaxWidth()
             .fillMaxHeight()
@@ -49,26 +54,25 @@ fun DayPredictionScreen(viewModel: MainViewModel, bgColor: Color, bannerTitle: S
         val appIcon by viewModel.appIconImageResourceLiveData.observeAsState()
         val weather = weatherApi
         weather?.let {
+            val dimen8 = dimensionResource(id = R.dimen.dp_8)
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(start = 8.dp, end = 8.dp)
+                    .padding(start = dimen8, end = dimen8)
             ) {
                 Text(
                     text = bannerTitle.ifEmpty { stringResource(R.string.banner_hourly_title) },
                     fontSize = h2TextSize,
                     color = textColor,
-                    modifier = Modifier.padding(8.dp)
+                    modifier = Modifier.padding(dimen8)
                 )
-                Divider(color = Color.Red, thickness = 1.dp)
-                Spacer(modifier = Modifier.height(8.dp))
+                Divider(color = Color.Gray, thickness = dimensionResource(id = R.dimen.dp_1))
+                Spacer(modifier = Modifier.height(dimen8))
 
                 LazyRow(
                     modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    horizontalArrangement = Arrangement.spacedBy(dimen8)
                 ) {
-
-
                     itemsIndexed(weather.hourly.getHourlyPredictions()) { index, item ->
 
                         Column(
@@ -81,12 +85,14 @@ fun DayPredictionScreen(viewModel: MainViewModel, bgColor: Color, bannerTitle: S
                                 painter = if (appIcon!!.type == Constants.IMG_TYPE_DRAWABLE) painterResource(
                                     id = AppUtil.getIconImageResource(item.weatherCode, appIcon!!)
                                 ) else rememberAsyncImagePainter(
-                                    AppUtil.getIconImageUrl(
-                                        item.weatherCode,
-                                        appIcon!!.iconImgUrlResponse!!
-                                    )
+                                    appIcon?.iconImgUrlResponse?.let { it1 ->
+                                        AppUtil.getIconImageUrl(
+                                            item.weatherCode,
+                                            it1
+                                        )
+                                    }
                                 ),
-                                contentDescription = "imgSrc"
+                                contentDescription = "imgSrc",
                             )
                             Text(text = "${item.temp}°", fontSize = normalTextSize)
 

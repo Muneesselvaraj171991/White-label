@@ -13,6 +13,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -21,6 +22,7 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -38,22 +40,26 @@ import com.white.label.weather.viewModel.MainViewModel
 fun DaysPredictionList(viewModel: MainViewModel, bgColor: Color, bannerTitle: String) {
     Card(
         shape = RoundedCornerShape(8.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = bgColor,
+        ),
         modifier = Modifier
             .fillMaxWidth()
             .fillMaxHeight()
-            .padding(8.dp)
-            .background(bgColor)
+            .padding(8.dp),
+
 
     ) {
         val weatherApi by viewModel.webApiLiveData.observeAsState()
         val appIcon by viewModel.appIconImageResourceLiveData.observeAsState()
+        val dimen8 = dimensionResource(id = R.dimen.dp_8)
 
         val weather = weatherApi
         weather?.let {
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(start = 8.dp, end = 8.dp)
+                    .padding(start = dimen8, end = dimen8)
             ) {
                 Text(
                     text = bannerTitle.ifEmpty { stringResource(R.string.banner_days_title) },
@@ -63,11 +69,11 @@ fun DaysPredictionList(viewModel: MainViewModel, bgColor: Color, bannerTitle: St
 
 
                 )
-                Divider(color = Color.Gray, thickness = 1.dp)
+                Divider(color = Color.Gray, thickness = dimensionResource(id = R.dimen.dp_1))
 
                 LazyColumn(
                     modifier = Modifier.fillMaxWidth(),
-                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                    verticalArrangement = Arrangement.spacedBy(dimen8)
                 ) {
                     val daysPrediction = weather.daily
                     itemsIndexed(daysPrediction.temperature_2m_min) { index, item ->

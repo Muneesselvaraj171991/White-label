@@ -38,13 +38,13 @@
 
       {
         "type": "prediction_list",
-        "bgColor": "#F44336",
+        "bgColor": "#FFFFFF",
         "title": "Weather predictions for 7 upcoming days"
 
       },
       {
         "type": "day_prediction",
-        "bgColor": "#F44336",
+        "bgColor": "#FFFFFF",
         "title": "hourly prediction for today"
 
       },

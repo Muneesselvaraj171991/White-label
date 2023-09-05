@@ -15,6 +15,7 @@ import androidx.compose.ui.graphics.Color
 import com.white.label.weather.ui.theme.h1TextSize
 import com.white.label.weather.ui.theme.h2TextSize
 import com.white.label.weather.ui.theme.normalTextSize
+import com.white.label.weather.ui.theme.textColor
 import com.white.label.weather.util.AppUtil
 import com.white.label.weather.viewModel.MainViewModel
 
@@ -35,19 +36,24 @@ fun CurrentWeatherScreen(viewModel: MainViewModel, bgColor: Color) {
         weather?.let {
             Text(
                 text = AppUtil.getCityName(weather.latitude, weather.longitude),
-                fontSize = h2TextSize
+                fontSize = h2TextSize,
+                color = textColor
             )
             Text(
                 text = weather.current_weather.temperature.toString() + "\u2103",
-                fontSize = h1TextSize
+                fontSize = h1TextSize,
+                color = textColor
+
             )
             Text(
                 text = AppUtil.getWeatherStatus(weather.current_weather.weathercode),
-                fontSize = normalTextSize
+                fontSize = normalTextSize,
+                color = textColor
             )
             Text(
                 text = "H:${weather.daily.temperature_2m_max[0]} L:${weather.daily.temperature_2m_min[0]}",
-                fontSize = normalTextSize
+                fontSize = normalTextSize,
+                color = textColor
             )
         }
 

@@ -135,18 +135,18 @@ class MainActivity : ComponentActivity() {
                                 when (bannerUnit.type) {
                                     BANNER_TYPE_CURRENT_WEATHER -> CurrentWeatherScreen(
                                         viewModel,
-                                        banner.backgroundColor
+                                        bannerUnit.bgColor
                                     )
 
                                     BANNER_TYPE_DAY_PREDICTION -> DayPredictionScreen(
                                         viewModel,
-                                        banner.backgroundColor,
+                                        bannerUnit.bgColor,
                                         banner.title!!
                                     )
 
                                     BANNER_TYPE_PREDICTION_LIST -> DaysPredictionList(
                                         viewModel,
-                                        banner.backgroundColor,
+                                        bannerUnit.bgColor,
                                         banner.title!!
                                     )
                                 }
