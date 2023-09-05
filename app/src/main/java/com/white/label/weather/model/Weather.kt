@@ -14,3 +14,4 @@ data class Weather(
     val timezone_abbreviation: String,
     val utc_offset_seconds: Int
 )
+

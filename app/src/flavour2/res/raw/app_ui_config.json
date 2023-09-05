@@ -1,5 +1,70 @@
 {
 
 
+  "theme": {
+    "light": {
+      "primary": "#7D5260",
+      "secondary": "#00dae6",
+      "tertiary": "#00ADB5",
+      "textColor": "#EEEEEE",
+      "h1TextSize": 26,
+      "h2TextSize": 24,
+      "normalTextSize": 16
+
+    },
+    "dark" : {
+      "primary": "#7D5260",
+      "secondary": "#222831",
+      "tertiary": "#00ADB5",
+      "textColor": "#EEEEEE",
+      "h1TextSize": 26,
+      "h2TextSize": 22,
+      "normalTextSize": 16
+    }
+  },
+  "mainScreen": {
+    "drawables": {
+      "bgImage": {
+        "drawableType": "drawable",
+        "snowImageSrc": "clouds_with_snow_01",
+        "cloudImageSrc": "clouds_with_lighting_01",
+        "rainImageSrc": "clouds_with_rain_01",
+        "sunnyImageSrc": "sun_with_2cloud_rain_01",
+        "thunderImageSrc": "sun_with_clouds_snow_01"
+      },
+
+      "icons": {
+        "drawableType": "drawable",
+        "snowImageSrc": "ic_snowy",
+        "cloudImageSrc": "ic_cloudy",
+        "rainImageSrc": "ic_rainy",
+        "sunnyImageSrc": "ic_sunny",
+        "thunderImageSrc": "ic_thunder"
+
+      }
+    },
+    #for flavour1 bannar will be -> list  -> current weather -> day hourly prediction
+    "banners": [
+
+      {
+        "type": "prediction_list",
+        "bgColor": "#F44336",
+        "title": "Weather predictions for 7 upcoming days"
+
+      },
+      {
+        "type": "current_weather",
+        "bgColor": "#F44336"
+      },
+      {
+        "type": "day_prediction",
+        "bgColor": "#F44336",
+        "title": "hourly prediction for today"
+
+      }
+
+    ]
+
+  }
 
 }

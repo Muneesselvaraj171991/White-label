@@ -30,40 +30,6 @@ android {
         }
     }
 
-/*
-
-    flavorDimensions += "version"
-    productFlavors {
-        create("demo") {
-
-            dimension = "version"
-            applicationIdSuffix = ".demo"
-            versionNameSuffix = "-demo"
-        }
-        create("full") {
-            dimension = "version"
-            applicationIdSuffix = ".base"
-            versionNameSuffix = "-base"
-        }
-    }
-
-    sourceSets{
-        main {
-            manifest.srcFile 'AndroidManifest.xml'
-            java.srcDirs = ['src']
-            resources.srcDirs = ['src']
-            aidl.srcDirs = ['src']
-            renderscript.srcDirs = ['src']
-            res.srcDirs = ['res']
-            assets.srcDirs = ['assets']
-            jni.srcDirs = [] // Set empty since we use our own ndkBuild task
-            jniLibs.srcDirs = ['libs']
-        }
-        flavor1 {
-            java.srcDirs = ['src-flavor1']
-            res.srcDirs = ['res-flavor1']
-        }
-*/
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
@@ -85,6 +51,11 @@ android {
     }
     flavorDimensions += listOf("weather")
     productFlavors {
+        create("default") {
+            dimension = "weather"
+            applicationId = "com.white.label.weather.default"
+        }
+
         create("flavour1") {
             dimension = "weather"
             applicationId = "com.white.label.weather.flavour1"
@@ -104,9 +75,9 @@ dependencies {
     implementation("androidx.activity:activity-compose:1.7.2")
     implementation(platform("androidx.compose:compose-bom:2023.03.00"))
     implementation("androidx.compose.material3:material3:1.1.1")
-
+    implementation("io.coil-kt:coil-compose:2.0.0-rc01")
     implementation("androidx.lifecycle:lifecycle-extensions:2.2.0")
-    implementation( "com.google.code.gson:gson:2.8.2")
+    implementation( "com.google.code.gson:gson:2.9.1")
     implementation("com.google.android.gms:play-services-location:21.0.1")
     implementation ("androidx.lifecycle:lifecycle-viewmodel-compose:2.6.1")
     implementation("androidx.compose.ui:ui")

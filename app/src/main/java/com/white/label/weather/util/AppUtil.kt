@@ -1,8 +1,18 @@
 package com.white.label.weather.util
 
-import android.content.Context
+import android.location.Geocoder
 import androidx.compose.ui.graphics.Color
 import androidx.core.graphics.toColorInt
+import com.white.label.weather.MainApplication
+import com.white.label.weather.ui.model.BgImage
+import com.white.label.weather.ui.model.Icons
+import com.white.label.weather.ui.theme.BkgDrawablesRes
+import com.white.label.weather.ui.theme.IconDrawables
+import java.text.SimpleDateFormat
+import java.util.Calendar
+import java.util.Date
+import java.util.Locale
+import kotlin.jvm.Throws
 
 
 class AppUtil {
@@ -53,29 +63,144 @@ class AppUtil {
             }
             return "NA"
         }
-        fun getColor(myColorString: String): Color {
-            try {
-                if(myColorString.isEmpty()) {
-                    return Color(myColorString.toColorInt())
-                } else {
-                    throw  IllegalArgumentException("Invalid color code, App needs valid color code");
 
-                }
-            } catch (ex: Exception) {
-                throw  IllegalArgumentException("Invalid color code, App needs valid color code");
+        fun getBgImageUrl(code: Int, bgResource: BkgDrawablesRes): Int {
+            if (code <= 3) {
+                return bgResource.bgSunny
+            } else if (code <= 48) {
+                return bgResource.bgCloud
+            } else if (code <= 67) {
+                return bgResource.bgRaining
+
+            } else if (code <= 86) {
+                return bgResource.bgSnowing
+            } else if (code >= 87) {
+
+                return bgResource.bgThundar
             }
+            return bgResource.bgSunny
         }
 
-        fun getImageId(context: Context, imageName: String): Int {
-            try {
-                return context.resources.getIdentifier(
-                    "drawable/$imageName",
-                    null,
-                    context.packageName
-                )
-            } catch (ex: IllegalArgumentException) {
-                throw IllegalArgumentException("Passing drawable name:$imageName is not valid")
+        fun getBgImageUrl(code: Int, bgUrl: BgImage): String {
+            if (code <= 3) {
+                return bgUrl.sunnyImageSrc!!
+            } else if (code <= 48) {
+                return bgUrl.cloudImageSrc!!
+            } else if (code <= 67) {
+                return bgUrl.rainImageSrc!!
+
+            } else if (code <= 86) {
+                return bgUrl.snowImageSrc!!
+            } else if (code >= 87) {
+
+                return bgUrl.thunderImageSrc!!
             }
+            return bgUrl.sunnyImageSrc!!
+        }
+
+        fun getIconImageResource(code: Int, iconResource: IconDrawables): Int {
+            if (code <= 3) {
+                return iconResource.iconSunny
+            } else if (code <= 48) {
+                return iconResource.iconCloud
+            } else if (code <= 67) {
+                return iconResource.iconRaining
+
+            } else if (code <= 86) {
+                return iconResource.iconSnowing
+            } else if (code >= 87) {
+
+                return iconResource.iconThundar
+            }
+            return iconResource.iconSunny
+        }
+
+        fun getIconImageUrl(code: Int, iconUrl: Icons): String {
+            if (code <= 3) {
+                return iconUrl.sunnyImageSrc!!
+            } else if (code <= 48) {
+                return iconUrl.cloudImageSrc!!
+            } else if (code <= 67) {
+                return iconUrl.rainImageSrc!!
+
+            } else if (code <= 86) {
+                return iconUrl.snowImageSrc!!
+            } else if (code >= 87) {
+
+                return iconUrl.thunderImageSrc!!
+            }
+            return iconUrl.sunnyImageSrc!!
+        }
+
+        @Throws(IllegalArgumentException::class)
+        fun getColor(myColorString: String): Color {
+                if (myColorString.isNotEmpty()) {
+                    return Color(myColorString.toColorInt())
+                } else {
+                    throw IllegalArgumentException("Invalid color code, App needs valid color code")
+
+                }
+        }
+
+        @Throws(IllegalArgumentException::class)
+        fun getImageId(imageName: String): Int {
+                if (imageName.isNotEmpty()) {
+                    return MainApplication.appContext.resources.getIdentifier(
+                        "drawable/$imageName",
+                        null,
+                        MainApplication.appContext.packageName
+                    )
+                } else {
+                    throw IllegalArgumentException("Image resource should not be empty")
+
+                }
+                   }
+
+        fun getDay(dateStr: String): String {
+            var date: Date
+            val formatter = SimpleDateFormat("yyyy-MM-dd")
+            date = formatter.parse(dateStr)!!
+            val c: Calendar = Calendar.getInstance()
+            c.time = date
+            val dayOfWeek: Int = c.get(Calendar.DAY_OF_WEEK)
+            when (dayOfWeek) {
+                Calendar.SUNDAY -> {
+                    return "Sunday"
+                }
+
+                Calendar.MONDAY -> {
+                    return "Monday"
+                }
+
+                Calendar.TUESDAY -> {
+                    return "Tuesday"
+                }
+
+                Calendar.WEDNESDAY -> {
+                    return "Wednesday"
+                }
+
+                Calendar.THURSDAY -> {
+                    return "Thursday"
+                }
+
+                Calendar.FRIDAY -> {
+                    return "Friday"
+                }
+
+                Calendar.SATURDAY -> {
+                    return "Saturday"
+                }
+            }
+            return "NA"
+        }
+
+        fun getCityName(lat: Double, long: Double): String {
+            val cityName: String?
+            val geoCoder = Geocoder(MainApplication.appContext, Locale.getDefault())
+            val Adress = geoCoder.getFromLocation(lat, long, 3)
+            cityName = Adress?.get(0)?.adminArea
+            return cityName!!
         }
     }
 }

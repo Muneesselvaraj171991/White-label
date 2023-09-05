@@ -2,39 +2,55 @@ package com.white.label.weather.view
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
+import com.white.label.weather.ui.theme.h1TextSize
+import com.white.label.weather.ui.theme.h2TextSize
+import com.white.label.weather.ui.theme.normalTextSize
+import com.white.label.weather.util.AppUtil
+import com.white.label.weather.viewModel.MainViewModel
 
 
 @Composable
-fun currentWeatherScreen() {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .fillMaxHeight(),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally,
+fun CurrentWeatherScreen(viewModel: MainViewModel, bgColor: Color) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .fillMaxHeight()
+            .background(bgColor),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally,
 
         ) {
-            Text(text = "Kungalv", fontSize = 24.sp)
-            Text(text = "19"+"\u2103"
-                , fontSize = 44.sp)
-            Text(text = "Example tfftrftrytyt", fontSize = 16.sp)
-            Text(text = "H: L:", fontSize = 16.sp)
-
-
+        val weatherApi by viewModel.webApiLiveData.observeAsState()
+        val weather = weatherApi
+        weather?.let {
+            Text(
+                text = AppUtil.getCityName(weather.latitude, weather.longitude),
+                fontSize = h2TextSize
+            )
+            Text(
+                text = weather.current_weather.temperature.toString() + "\u2103",
+                fontSize = h1TextSize
+            )
+            Text(
+                text = AppUtil.getWeatherStatus(weather.current_weather.weathercode),
+                fontSize = normalTextSize
+            )
+            Text(
+                text = "H:${weather.daily.temperature_2m_max[0]} L:${weather.daily.temperature_2m_min[0]}",
+                fontSize = normalTextSize
+            )
         }
+
     }
+}
 

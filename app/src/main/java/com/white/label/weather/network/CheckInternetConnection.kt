@@ -11,7 +11,7 @@ class CheckInternetConnection(context: Context) : LiveData<Boolean>() {
     private val connectivityManager =
         context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
 
-    private val networkCallbacks = object : ConnectivityManager.NetworkCallback(){
+    private val networkCallbacks = object : ConnectivityManager.NetworkCallback() {
         override fun onAvailable(network: Network) {
             super.onAvailable(network)
             postValue(true)
@@ -28,12 +28,12 @@ class CheckInternetConnection(context: Context) : LiveData<Boolean>() {
         }
     }
 
-    private fun checkInternet(){
+    private fun checkInternet() {
         val network = connectivityManager.activeNetwork
-        if(network==null){
+        if (network == null) {
             postValue(false)
         }
-        val requestBuilder =NetworkRequest.Builder().apply {
+        val requestBuilder = NetworkRequest.Builder().apply {
             addCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
             addCapability(NetworkCapabilities.NET_CAPABILITY_VALIDATED)
             addTransportType(NetworkCapabilities.TRANSPORT_CELLULAR)
@@ -41,7 +41,7 @@ class CheckInternetConnection(context: Context) : LiveData<Boolean>() {
             addTransportType(NetworkCapabilities.TRANSPORT_ETHERNET)
         }.build()
 
-        connectivityManager.registerNetworkCallback(requestBuilder,networkCallbacks)
+        connectivityManager.registerNetworkCallback(requestBuilder, networkCallbacks)
     }
 
     override fun onActive() {
