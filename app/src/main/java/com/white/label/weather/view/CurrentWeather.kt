@@ -21,12 +21,12 @@ import com.white.label.weather.viewModel.MainViewModel
 
 
 @Composable
-fun CurrentWeatherScreen(viewModel: MainViewModel, bgColor: Color) {
+fun CurrentWeatherScreen(viewModel: MainViewModel) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
             .fillMaxHeight()
-            .background(bgColor),
+            ,
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
 

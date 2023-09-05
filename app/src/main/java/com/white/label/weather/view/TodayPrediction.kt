@@ -47,7 +47,6 @@ fun DayPredictionScreen(viewModel: MainViewModel, bgColor: Color, bannerTitle: S
             .fillMaxWidth()
             .fillMaxHeight()
             .padding(8.dp)
-            .background(bgColor)
 
     ) {
         val weatherApi by viewModel.webApiLiveData.observeAsState()
@@ -80,7 +79,7 @@ fun DayPredictionScreen(viewModel: MainViewModel, bgColor: Color, bannerTitle: S
                             horizontalAlignment = Alignment.CenterHorizontally,
                         ) {
 
-                            Text(text = item.time, fontSize = h2TextSize)
+                            Text(text = item.time, fontSize = h2TextSize ,color = textColor)
                             Image(
                                 painter = if (appIcon!!.type == Constants.IMG_TYPE_DRAWABLE) painterResource(
                                     id = AppUtil.getIconImageResource(item.weatherCode, appIcon!!)
@@ -94,7 +93,7 @@ fun DayPredictionScreen(viewModel: MainViewModel, bgColor: Color, bannerTitle: S
                                 ),
                                 contentDescription = "imgSrc",
                             )
-                            Text(text = "${item.temp}°", fontSize = normalTextSize)
+                            Text(text = "${item.temp}°", color = textColor, fontSize = normalTextSize)
 
                         }
                     }

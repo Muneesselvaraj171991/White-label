@@ -134,8 +134,7 @@ class MainActivity : ComponentActivity() {
                             Row(modifier = Modifier.weight(bannerUnit.weight, true)) {
                                 when (bannerUnit.type) {
                                     BANNER_TYPE_CURRENT_WEATHER -> CurrentWeatherScreen(
-                                        viewModel,
-                                        bannerUnit.bgColor
+                                        viewModel
                                     )
 
                                     BANNER_TYPE_DAY_PREDICTION -> DayPredictionScreen(

@@ -85,8 +85,10 @@ fun DaysPredictionList(viewModel: MainViewModel, bgColor: Color, bannerTitle: St
                         ) {
                             Text(
                                 text = AppUtil.getDay(daysPrediction.time[index]),
-                                fontSize = normalTextSize
-                            )
+                                fontSize = normalTextSize,
+                                color = textColor
+
+                                )
                             Image(
                                 painter = if (appIcon!!.type == Constants.IMG_TYPE_DRAWABLE) painterResource(
                                     id = AppUtil.getIconImageResource(
@@ -103,12 +105,15 @@ fun DaysPredictionList(viewModel: MainViewModel, bgColor: Color, bannerTitle: St
                             )
                             Text(
                                 text = "${daysPrediction.temperature_2m_min[index]}°",
-                                fontSize = normalTextSize
-                            )
+                                fontSize = normalTextSize,
+                                color = textColor
+
+                                )
                             Text(
                                 text = "${daysPrediction.temperature_2m_max[index]}°",
-                                fontSize = normalTextSize
-                            )
+                                fontSize = normalTextSize,
+                                color = textColor
+                                )
 
 
                         }

@@ -6,7 +6,7 @@
       "primary": "#7D5260",
       "secondary": "#00dae6",
       "tertiary": "#00ADB5",
-      "textColor": "#EEEEEE",
+      "textColor": "#000000",
       "h1TextSize": 26,
       "h2TextSize": 24,
       "normalTextSize": 16
@@ -16,7 +16,7 @@
       "primary": "#7D5260",
       "secondary": "#222831",
       "tertiary": "#00ADB5",
-      "textColor": "#EEEEEE",
+      "textColor": "#000000",
       "h1TextSize": 26,
       "h2TextSize": 22,
       "normalTextSize": 16
@@ -48,7 +48,7 @@
 
       {
         "type": "prediction_list",
-        "bgColor": "#F44336",
+        "bgColor": "#A26C68",
         "title": "Weather predictions for 7 upcoming days"
 
       },
@@ -58,7 +58,7 @@
       },
       {
         "type": "day_prediction",
-        "bgColor": "#F44336",
+        "bgColor": "#A26C68",
         "title": "hourly prediction for today"
 
       }
