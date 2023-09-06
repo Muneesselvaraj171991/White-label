@@ -5,3 +5,18 @@ jsonUI from flavours(see flavour1/res & flavour2/res), If I receive a valid json
 If you send me an empty json file I consider that as default and forcing app to use default resources.
 
 For this application , I have made three product flavours namely default, flavour1 and flavour2 with different white label resources
+
+
+I was free to define my own Json api to control dynamic UIs, so 
+
+     {
+       "theme": {
+                  "light" : { }
+                  "dark" : {}
+                }
+                
+        "mainScreen": { "bgDrawables":{} // it supports both res drwable and also url from user
+                        "iconDrawablse": {} 
+                        "Banners":[current_weather, day_prediction, prediction_list] // user can rearrange the banners based on their needs
+                      }
+      }
