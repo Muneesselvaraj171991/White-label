@@ -32,26 +32,25 @@ fun CurrentWeatherScreen(viewModel: MainViewModel) {
 
         ) {
         val weatherApi by viewModel.webApiLiveData.observeAsState()
-        val weather = weatherApi
-        weather?.let {
+        weatherApi?.let {it
             Text(
-                text = AppUtil.getCityName(weather.latitude, weather.longitude),
+                text = AppUtil.getCityName(it.latitude, it.longitude),
                 fontSize = h2TextSize,
                 color = textColor
             )
             Text(
-                text = weather.current_weather.temperature.toString() + "\u2103",
+                text = it.current_weather.temperature.toString() + "\u2103",
                 fontSize = h1TextSize,
                 color = textColor
 
             )
             Text(
-                text = AppUtil.getWeatherStatus(weather.current_weather.weathercode),
+                text = AppUtil.getWeatherStatus(it.current_weather.weathercode),
                 fontSize = normalTextSize,
                 color = textColor
             )
             Text(
-                text = "H:${weather.daily.temperature_2m_max[0]} L:${weather.daily.temperature_2m_min[0]}",
+                text = "H:${it.daily.temperature_2m_max[0]} L:${it.daily.temperature_2m_min[0]}",
                 fontSize = normalTextSize,
                 color = textColor
             )

@@ -39,20 +39,20 @@ import com.white.label.weather.viewModel.MainViewModel
 @Composable
 fun DayPredictionScreen(viewModel: MainViewModel, bgColor: Color, bannerTitle: String) {
     Card(
-        shape = RoundedCornerShape(8.dp),
+        shape = RoundedCornerShape(
+            dimensionResource(id = R.dimen.dp_8)),
         colors = CardDefaults.cardColors(
             containerColor = bgColor,
         ),
         modifier = Modifier
             .fillMaxWidth()
             .fillMaxHeight()
-            .padding(8.dp)
+            .padding(dimensionResource(id = R.dimen.dp_8))
 
     ) {
         val weatherApi by viewModel.webApiLiveData.observeAsState()
         val appIcon by viewModel.appIconImageResourceLiveData.observeAsState()
-        val weather = weatherApi
-        weather?.let {
+        weatherApi?.let { it
             val dimen8 = dimensionResource(id = R.dimen.dp_8)
             Column(
                 modifier = Modifier
@@ -72,7 +72,7 @@ fun DayPredictionScreen(viewModel: MainViewModel, bgColor: Color, bannerTitle: S
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.spacedBy(dimen8)
                 ) {
-                    itemsIndexed(weather.hourly.getHourlyPredictions()) { index, item ->
+                    itemsIndexed(it.hourly.getHourlyPredictions()) { index, item ->
 
                         Column(
                             modifier = Modifier.fillMaxWidth(),

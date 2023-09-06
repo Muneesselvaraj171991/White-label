@@ -39,14 +39,14 @@ import com.white.label.weather.viewModel.MainViewModel
 @Composable
 fun DaysPredictionList(viewModel: MainViewModel, bgColor: Color, bannerTitle: String) {
     Card(
-        shape = RoundedCornerShape(8.dp),
+        shape = RoundedCornerShape(dimensionResource(id = R.dimen.dp_8)),
         colors = CardDefaults.cardColors(
             containerColor = bgColor,
         ),
         modifier = Modifier
             .fillMaxWidth()
             .fillMaxHeight()
-            .padding(8.dp),
+            .padding(dimensionResource(id = R.dimen.dp_8)),
 
 
     ) {
@@ -54,8 +54,7 @@ fun DaysPredictionList(viewModel: MainViewModel, bgColor: Color, bannerTitle: St
         val appIcon by viewModel.appIconImageResourceLiveData.observeAsState()
         val dimen8 = dimensionResource(id = R.dimen.dp_8)
 
-        val weather = weatherApi
-        weather?.let {
+        weatherApi?.let {it
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -75,7 +74,7 @@ fun DaysPredictionList(viewModel: MainViewModel, bgColor: Color, bannerTitle: St
                     modifier = Modifier.fillMaxWidth(),
                     verticalArrangement = Arrangement.spacedBy(dimen8)
                 ) {
-                    val daysPrediction = weather.daily
+                    val daysPrediction = it.daily
                     itemsIndexed(daysPrediction.temperature_2m_min) { index, item ->
 
                         Row(
