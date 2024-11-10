@@ -1,7 +1,6 @@
 package com.white.label.weather.view
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -14,11 +13,10 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.Divider
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -38,7 +36,7 @@ import com.white.label.weather.viewModel.MainViewModel
 
 
 @Composable
-fun DaysPredictionList(viewModel: MainViewModel, bgColor: Color, bannerTitle: String) {
+fun DaysPredictionList(viewModel: MainViewModel, bgColor: Color, bannerTitle: String?) {
     Card(
         shape = RoundedCornerShape(dimensionResource(id = R.dimen.dp_8)),
         colors = CardDefaults.cardColors(
@@ -50,26 +48,31 @@ fun DaysPredictionList(viewModel: MainViewModel, bgColor: Color, bannerTitle: St
             .padding(dimensionResource(id = R.dimen.dp_8)),
 
 
-    ) {
+        ) {
         val weatherApi by viewModel.webApiFlowData.collectAsStateWithLifecycle()
         val appIcon by viewModel.appIconImageResourceFlow.collectAsStateWithLifecycle()
         val dimen8 = dimensionResource(id = R.dimen.dp_8)
 
-        weatherApi?.let {it
+        weatherApi?.let {
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(start = dimen8, end = dimen8)
             ) {
-                Text(
-                    text = bannerTitle.ifEmpty { stringResource(R.string.banner_days_title) },
-                    fontSize = h2TextSize,
-                    color = textColor,
-                    modifier = Modifier.padding(16.dp)
+                bannerTitle?.ifEmpty { stringResource(R.string.banner_days_title) }?.let { it1 ->
+                    Text(
+                        text = it1,
+                        fontSize = h2TextSize,
+                        color = textColor,
+                        modifier = Modifier.padding(16.dp)
 
 
+                    )
+                }
+                HorizontalDivider(
+                    thickness = dimensionResource(id = R.dimen.dp_1),
+                    color = Color.Gray
                 )
-                Divider(color = Color.Gray, thickness = dimensionResource(id = R.dimen.dp_1))
 
                 LazyColumn(
                     modifier = Modifier.fillMaxWidth(),
@@ -77,47 +80,54 @@ fun DaysPredictionList(viewModel: MainViewModel, bgColor: Color, bannerTitle: St
                 ) {
                     val daysPrediction = it.daily
                     itemsIndexed(daysPrediction.temperature_2m_min) { index, item ->
+                        HorizontalDivider(color = Color.Gray)
 
                         Row(
-                            modifier = Modifier.fillMaxSize(),
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .weight(1.0f),
                             verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.SpaceEvenly
+                            horizontalArrangement = Arrangement.SpaceBetween
                         ) {
                             Text(
+                                modifier = Modifier.weight(0.2f),
                                 text = AppUtil.getDay(daysPrediction.time[index]),
                                 fontSize = normalTextSize,
                                 color = textColor
-
-                                )
+                            )
                             Image(
-                                painter = if (appIcon!!.type == Constants.IMG_TYPE_DRAWABLE) painterResource(
+                                modifier = Modifier.weight(0.4f),
+                                painter = if (appIcon.type == Constants.IMG_TYPE_DRAWABLE) painterResource(
                                     id = AppUtil.getIconImageResource(
                                         daysPrediction.weathercode[index],
-                                        appIcon!!
+                                        appIcon
                                     )
                                 ) else rememberAsyncImagePainter(
                                     AppUtil.getIconImageUrl(
                                         daysPrediction.weathercode[index],
-                                        appIcon!!.iconImgUrlResponse!!
+                                        appIcon.iconImgUrlResponse!!
                                     )
                                 ),
                                 contentDescription = "imgSrc"
                             )
                             Text(
+                                modifier = Modifier.weight(0.2f),
+
                                 text = "${daysPrediction.temperature_2m_min[index]}°",
                                 fontSize = normalTextSize,
                                 color = textColor
 
-                                )
+                            )
                             Text(
+                                modifier = Modifier.weight(0.2f),
+
                                 text = "${daysPrediction.temperature_2m_max[index]}°",
                                 fontSize = normalTextSize,
                                 color = textColor
-                                )
+                            )
 
 
                         }
-                        Divider(color = Color.Gray)
 
                     }
                 }

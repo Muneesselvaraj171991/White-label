@@ -1,4 +1,4 @@
-package com.dog.app.network
+package com.white.label.weather.network
 
 import android.content.Context
 import android.net.ConnectivityManager

@@ -1,6 +1,5 @@
 package com.white.label.weather.view
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -8,10 +7,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.white.label.weather.ui.theme.h1TextSize
 import com.white.label.weather.ui.theme.h2TextSize
@@ -33,7 +30,7 @@ fun CurrentWeatherScreen(viewModel: MainViewModel) {
 
         ) {
         val weatherApi by viewModel.webApiFlowData.collectAsStateWithLifecycle()
-        weatherApi?.let {it
+        weatherApi?.let {
             Text(
                 text = it.location,
                 fontSize = h2TextSize,

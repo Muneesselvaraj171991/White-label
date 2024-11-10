@@ -19,7 +19,7 @@
         android:theme="@style/Theme.Whitelabel"
         tools:targetApi="31">
         <activity
-            android:name="com.example.white_label.MainActivity"
+            android:name="com.white.label.weather.MainActivity"
             android:exported="true"
             android:label="@string/app_name"
             android:theme="@style/Theme.Whitelabel">

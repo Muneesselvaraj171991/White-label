@@ -4,7 +4,7 @@ import android.app.Application
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
-import com.dog.app.network.RemoteCall
+import com.white.label.weather.network.RemoteCall
 import com.google.gson.Gson
 import com.white.label.weather.model.Weather
 import com.white.label.weather.ui.label.UiCompose
@@ -34,12 +34,12 @@ import java.util.Locale
 
 
 class MainViewModel(application: Application) : AndroidViewModel(application) {
-     val mRemoteCall: RemoteCall = RemoteCall.remoteCallInstance
-     val uiComposeFlow: MutableStateFlow<UiCompose?> = MutableStateFlow(null)
+    private val mRemoteCall: RemoteCall = RemoteCall.remoteCallInstance
+    val uiComposeFlow: MutableStateFlow<UiCompose?> = MutableStateFlow(null)
     var webApiFlowData: MutableStateFlow<Weather?> = MutableStateFlow(null)
-     var appBgImageResourceFlow: MutableStateFlow<BkgDrawablesRes> =
-       MutableStateFlow(BkgDrawablesRes()) // assigning default value to avoid drawing time
-     var appIconImageResourceFlow: MutableStateFlow<IconDrawables> =
+    var appBgImageResourceFlow: MutableStateFlow<BkgDrawablesRes> =
+        MutableStateFlow(BkgDrawablesRes()) // assigning default value to avoid drawing time
+    var appIconImageResourceFlow: MutableStateFlow<IconDrawables> =
         MutableStateFlow(IconDrawables()) // assigning default value
     var currentWeatherCodeFlow: MutableStateFlow<Int> = MutableStateFlow(0)
 
@@ -155,8 +155,10 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
             mRemoteCall.weatherApi(object : RemoteCall.Result {
                 override fun onResponse(weather: Weather) {
                     currentWeatherCodeFlow.value = weather.current_weather.weathercode
-                    AppUtil.getCityName(weather.latitude,weather.longitude){
-                        weather.location = it
+                    AppUtil.getCityName(weather.latitude, weather.longitude) {
+                        if (it != null) {
+                            weather.location = it
+                        }
                     }
                     webApiFlowData.value = weather
                 }

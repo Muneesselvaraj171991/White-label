@@ -65,7 +65,7 @@ class AppUtil {
         }
 
         fun getBgImageUrl(code: Int, bgResource: BkgDrawablesRes): Int {
-            if (code <= 3) {
+            if (code == 0) {
                 return bgResource.bgSunny
             } else if (code <= 48) {
                 return bgResource.bgCloud
@@ -75,27 +75,26 @@ class AppUtil {
             } else if (code <= 86) {
                 return bgResource.bgSnowing
             } else if (code >= 87) {
-
                 return bgResource.bgThundar
             }
             return bgResource.bgSunny
         }
 
-        fun getBgImageUrl(code: Int, bgUrl: BgImage): String {
-            if (code <= 3) {
-                return bgUrl.sunnyImageSrc!!
+        fun getBgImageUrl(code: Int, bgUrl: BgImage): String? {
+             if (code == 0) {
+                return bgUrl.sunnyImageSrc
             } else if (code <= 48) {
-                return bgUrl.cloudImageSrc!!
+                return bgUrl.cloudImageSrc
             } else if (code <= 67) {
-                return bgUrl.rainImageSrc!!
+                return bgUrl.rainImageSrc
 
             } else if (code <= 86) {
-                return bgUrl.snowImageSrc!!
+                return bgUrl.snowImageSrc
             } else if (code >= 87) {
 
-                return bgUrl.thunderImageSrc!!
+                return bgUrl.thunderImageSrc
             }
-            return bgUrl.sunnyImageSrc!!
+            return bgUrl.sunnyImageSrc
         }
 
         fun getIconImageResource(code: Int, iconResource: IconDrawables): Int {
@@ -115,21 +114,21 @@ class AppUtil {
             return iconResource.iconSunny
         }
 
-        fun getIconImageUrl(code: Int, iconUrl: Icons): String {
+        fun getIconImageUrl(code: Int, iconUrl: Icons): String? {
             if (code <= 3) {
-                return iconUrl.sunnyImageSrc!!
+                return iconUrl.sunnyImageSrc
             } else if (code <= 48) {
-                return iconUrl.cloudImageSrc!!
+                return iconUrl.cloudImageSrc
             } else if (code <= 67) {
-                return iconUrl.rainImageSrc!!
+                return iconUrl.rainImageSrc
 
             } else if (code <= 86) {
-                return iconUrl.snowImageSrc!!
+                return iconUrl.snowImageSrc
             } else if (code >= 87) {
 
-                return iconUrl.thunderImageSrc!!
+                return iconUrl.thunderImageSrc
             }
-            return iconUrl.sunnyImageSrc!!
+            return iconUrl.sunnyImageSrc
         }
 
         @Throws(IllegalArgumentException::class)
@@ -157,9 +156,9 @@ class AppUtil {
         }
 
         fun getDay(dateStr: String): String {
-            var date: Date
+            val date: Date
             val formatter = SimpleDateFormat("yyyy-MM-dd")
-            date = formatter.parse(dateStr)!!
+            date = formatter.parse(dateStr)
             val c: Calendar = Calendar.getInstance()
             c.time = date
             val dayOfWeek: Int = c.get(Calendar.DAY_OF_WEEK)
@@ -195,13 +194,13 @@ class AppUtil {
             return "NA"
         }
 
-        fun getCityName(lat: Double, long: Double,  callback: (String)->Unit) {
+        fun getCityName(lat: Double, long: Double,  callback: (String?)->Unit) {
             var cityName: String?
             val geoCoder = Geocoder(MainApplication.appContext, Locale.getDefault())
             geoCoder.getFromLocation(lat, long, 3, object : Geocoder.GeocodeListener {
                 override fun onGeocode(addresses: MutableList<Address>) {
-                    cityName = addresses[0]?.adminArea
-                    callback(cityName!!)
+                    cityName = addresses[0].adminArea
+                    callback(cityName)
                     // code
                 }
 
