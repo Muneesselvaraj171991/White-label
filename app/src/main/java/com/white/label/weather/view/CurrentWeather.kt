@@ -12,6 +12,7 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.white.label.weather.ui.theme.h1TextSize
 import com.white.label.weather.ui.theme.h2TextSize
 import com.white.label.weather.ui.theme.normalTextSize
@@ -31,10 +32,10 @@ fun CurrentWeatherScreen(viewModel: MainViewModel) {
         horizontalAlignment = Alignment.CenterHorizontally,
 
         ) {
-        val weatherApi by viewModel.webApiLiveData.observeAsState()
+        val weatherApi by viewModel.webApiFlowData.collectAsStateWithLifecycle()
         weatherApi?.let {it
             Text(
-                text = AppUtil.getCityName(it.latitude, it.longitude),
+                text = it.location,
                 fontSize = h2TextSize,
                 color = textColor
             )

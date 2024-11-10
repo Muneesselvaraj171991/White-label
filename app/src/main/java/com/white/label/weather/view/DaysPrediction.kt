@@ -26,6 +26,7 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.rememberAsyncImagePainter
 import com.example.white_label.R
 import com.white.label.weather.ui.theme.h2TextSize
@@ -50,8 +51,8 @@ fun DaysPredictionList(viewModel: MainViewModel, bgColor: Color, bannerTitle: St
 
 
     ) {
-        val weatherApi by viewModel.webApiLiveData.observeAsState()
-        val appIcon by viewModel.appIconImageResourceLiveData.observeAsState()
+        val weatherApi by viewModel.webApiFlowData.collectAsStateWithLifecycle()
+        val appIcon by viewModel.appIconImageResourceFlow.collectAsStateWithLifecycle()
         val dimen8 = dimensionResource(id = R.dimen.dp_8)
 
         weatherApi?.let {it

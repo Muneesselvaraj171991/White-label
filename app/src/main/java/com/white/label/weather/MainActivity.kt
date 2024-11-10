@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.darkColorScheme
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
@@ -21,6 +22,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.sp
 import androidx.core.app.ActivityCompat
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.rememberAsyncImagePainter
 import com.example.myapplication.ui.theme.MyApplicationTheme
 import com.google.android.gms.location.FusedLocationProviderClient
@@ -80,7 +82,7 @@ class MainActivity : ComponentActivity() {
         )
 
         setContent {
-            val uiCompose by viewModel.uiComposeLivedata.observeAsState()
+            val uiCompose by viewModel.uiComposeFlow.collectAsStateWithLifecycle()
             uiCompose?.let {
 
                 MyApplicationTheme(
@@ -95,8 +97,8 @@ class MainActivity : ComponentActivity() {
                         tertiary = darkTertiaryColor
                     )
                 ) {
-                    val bgImage by viewModel.appBgImageResourceLiveData.observeAsState()
-                    val currentWeatherCode by viewModel.currentWeatherCodeLiveData.observeAsState()
+                    val bgImage by viewModel.appBgImageResourceFlow.collectAsStateWithLifecycle()
+                    val currentWeatherCode by viewModel.currentWeatherCodeFlow.collectAsStateWithLifecycle()
                     Column(
                         modifier = Modifier
                             .fillMaxSize()

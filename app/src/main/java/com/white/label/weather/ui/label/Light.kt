@@ -1,4 +1,4 @@
-package com.white.label.weather.ui.model
+package com.white.label.weather.ui.label
 
 
 data class Light(

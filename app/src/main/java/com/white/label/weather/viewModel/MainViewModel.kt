@@ -3,12 +3,11 @@ package com.white.label.weather.viewModel
 import android.app.Application
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.dog.app.network.RemoteCall
 import com.google.gson.Gson
 import com.white.label.weather.model.Weather
-import com.white.label.weather.ui.model.UiCompose
+import com.white.label.weather.ui.label.UiCompose
 import com.white.label.weather.ui.theme.BkgDrawablesRes
 import com.white.label.weather.ui.theme.IconDrawables
 import com.white.label.weather.ui.theme.darkH1TextSize
@@ -29,18 +28,20 @@ import com.white.label.weather.util.AppUtil
 import com.white.label.weather.util.Constants
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.flow.MutableStateFlow
 import java.util.Locale
 
 
 class MainViewModel(application: Application) : AndroidViewModel(application) {
-    private val mRemoteCall: RemoteCall = RemoteCall.remoteCallInstance
-    var uiComposeLivedata: MutableLiveData<UiCompose> = MutableLiveData()
-    var webApiLiveData: MutableLiveData<Weather> = MutableLiveData()
-    var appBgImageResourceLiveData: MutableLiveData<BkgDrawablesRes> =
-        MutableLiveData(BkgDrawablesRes()) // assigning default value to avoid drawing time
-    var appIconImageResourceLiveData: MutableLiveData<IconDrawables> =
-        MutableLiveData(IconDrawables()) // assigning default value
-    var currentWeatherCodeLiveData: MutableLiveData<Int> = MutableLiveData(0)
+     val mRemoteCall: RemoteCall = RemoteCall.remoteCallInstance
+     val uiComposeFlow: MutableStateFlow<UiCompose?> = MutableStateFlow(null)
+    var webApiFlowData: MutableStateFlow<Weather?> = MutableStateFlow(null)
+     var appBgImageResourceFlow: MutableStateFlow<BkgDrawablesRes> =
+       MutableStateFlow(BkgDrawablesRes()) // assigning default value to avoid drawing time
+     var appIconImageResourceFlow: MutableStateFlow<IconDrawables> =
+        MutableStateFlow(IconDrawables()) // assigning default value
+    var currentWeatherCodeFlow: MutableStateFlow<Int> = MutableStateFlow(0)
 
 
     /**
@@ -51,7 +52,6 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
             try {
                 val gson = Gson()
                 val uiCompose = gson.fromJson(response, UiCompose::class.java)
-
                 //parse the theme
                 uiCompose.theme?.light.let {
                     val lightTheme = uiCompose!!.theme?.light
@@ -86,15 +86,15 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
                 backgroundDrawables?.let {
 
                     if (backgroundDrawables.drawableType!!.lowercase(Locale.ROOT) == Constants.IMG_TYPE_URL) {
-                        appBgImageResourceLiveData.postValue(
+                        appBgImageResourceFlow.value =
                             BkgDrawablesRes(
                                 type = Constants.IMG_TYPE_URL,
                                 bgImgUrlResponse = backgroundDrawables
                             )
-                        )
+
 
                     } else if (backgroundDrawables.drawableType.lowercase(Locale.ROOT) == Constants.IMG_TYPE_DRAWABLE) {
-                        appBgImageResourceLiveData.postValue(
+                        appBgImageResourceFlow.value =
                             BkgDrawablesRes(
                                 type = Constants.IMG_TYPE_DRAWABLE,
                                 bgRaining = AppUtil.getImageId(backgroundDrawables.rainImageSrc!!),
@@ -103,7 +103,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
                                 bgSunny = AppUtil.getImageId(backgroundDrawables.sunnyImageSrc!!),
                                 bgThundar = AppUtil.getImageId(backgroundDrawables.thunderImageSrc!!)
                             )
-                        )
+
 
                     } else {
                         throw IllegalArgumentException("Drawable type should be either drawable||url")
@@ -115,15 +115,15 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
                 val iconDrawables = uiCompose.mainScreen?.drawables?.icons
                 iconDrawables?.let {
                     if (iconDrawables.drawableType!!.lowercase(Locale.ROOT) == Constants.IMG_TYPE_URL) {
-                        appIconImageResourceLiveData.postValue(
+                        appIconImageResourceFlow.value =
                             IconDrawables(
                                 type = Constants.IMG_TYPE_URL,
                                 iconImgUrlResponse = iconDrawables
                             )
-                        )
+
 
                     } else if (iconDrawables.drawableType.lowercase(Locale.ROOT) == Constants.IMG_TYPE_DRAWABLE) {
-                        appIconImageResourceLiveData.postValue(
+                        appIconImageResourceFlow.value =
                             IconDrawables(
                                 type = Constants.IMG_TYPE_DRAWABLE,
                                 iconRaining = AppUtil.getImageId(iconDrawables.rainImageSrc!!),
@@ -132,14 +132,14 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
                                 iconSunny = AppUtil.getImageId(iconDrawables.sunnyImageSrc!!),
                                 iconThundar = AppUtil.getImageId(iconDrawables.thunderImageSrc!!)
                             )
-                        )
+
 
                     } else {
                         throw IllegalArgumentException("Drawable type should be either drawable||url")
                     }
                 }
 
-                uiComposeLivedata.postValue(uiCompose)
+                uiComposeFlow.value = uiCompose
 
             } catch (th: Throwable) {
                 Log.d("Exception is caught while parsing Json api", th.toString())
@@ -154,8 +154,11 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
 
             mRemoteCall.weatherApi(object : RemoteCall.Result {
                 override fun onResponse(weather: Weather) {
-                    currentWeatherCodeLiveData.postValue(weather.current_weather.weathercode)
-                    webApiLiveData.postValue(weather)
+                    currentWeatherCodeFlow.value = weather.current_weather.weathercode
+                    AppUtil.getCityName(weather.latitude,weather.longitude){
+                        weather.location = it
+                    }
+                    webApiFlowData.value = weather
                 }
 
                 override fun onFailure() {
@@ -164,6 +167,11 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
 
             }, latitude, longitude)
         }
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        viewModelScope.cancel()
     }
 
 }

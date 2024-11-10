@@ -12,6 +12,7 @@ data class Weather(
     val longitude: Double,
     val timezone: String,
     val timezone_abbreviation: String,
-    val utc_offset_seconds: Int
+    val utc_offset_seconds: Int,
+    var location:String
 )
 

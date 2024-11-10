@@ -1,4 +1,4 @@
-package com.white.label.weather.ui.model
+package com.white.label.weather.ui.label
 
 import androidx.compose.ui.graphics.Color
 import androidx.core.graphics.toColorInt

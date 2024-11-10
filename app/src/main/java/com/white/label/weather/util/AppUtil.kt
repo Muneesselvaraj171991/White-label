@@ -1,11 +1,12 @@
 package com.white.label.weather.util
 
+import android.location.Address
 import android.location.Geocoder
 import androidx.compose.ui.graphics.Color
 import androidx.core.graphics.toColorInt
 import com.white.label.weather.MainApplication
-import com.white.label.weather.ui.model.BgImage
-import com.white.label.weather.ui.model.Icons
+import com.white.label.weather.ui.label.BgImage
+import com.white.label.weather.ui.label.Icons
 import com.white.label.weather.ui.theme.BkgDrawablesRes
 import com.white.label.weather.ui.theme.IconDrawables
 import java.text.SimpleDateFormat
@@ -194,12 +195,25 @@ class AppUtil {
             return "NA"
         }
 
-        fun getCityName(lat: Double, long: Double): String {
-            val cityName: String?
+        fun getCityName(lat: Double, long: Double,  callback: (String)->Unit) {
+            var cityName: String?
             val geoCoder = Geocoder(MainApplication.appContext, Locale.getDefault())
-            val Adress = geoCoder.getFromLocation(lat, long, 3)
-            cityName = Adress?.get(0)?.adminArea
-            return cityName!!
+            geoCoder.getFromLocation(lat, long, 3, object : Geocoder.GeocodeListener {
+                override fun onGeocode(addresses: MutableList<Address>) {
+                    cityName = addresses[0]?.adminArea
+                    callback(cityName!!)
+                    // code
+                }
+
+                override fun onError(errorMessage: String?) {
+                    super.onError(errorMessage)
+                    callback("Unable to fetch loc!")
+
+
+                }
+
+            })
+
         }
     }
 }

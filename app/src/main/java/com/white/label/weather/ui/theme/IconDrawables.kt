@@ -1,7 +1,7 @@
 package com.white.label.weather.ui.theme
 
 import com.example.white_label.R
-import com.white.label.weather.ui.model.Icons
+import com.white.label.weather.ui.label.Icons
 
 class IconDrawables(
     val type: String = "drawable",
