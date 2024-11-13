@@ -1,7 +1,7 @@
-package com.white.label.weather.ui.theme
+package com.white.label.weather.view.ui.theme
 
 import com.example.white_label.R
-import com.white.label.weather.ui.label.BgImage
+import com.white.label.weather.view.ui.label.BgImage
 
 class BkgDrawablesRes(
     val type: String = "drawable",

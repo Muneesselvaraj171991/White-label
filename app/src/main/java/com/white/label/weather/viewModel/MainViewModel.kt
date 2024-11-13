@@ -4,50 +4,66 @@ import android.app.Application
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
-import com.white.label.weather.network.RemoteCall
+import com.example.white_label.R
+import com.white.label.weather.respository.RemoteCall
 import com.google.gson.Gson
 import com.white.label.weather.model.Weather
-import com.white.label.weather.ui.label.UiCompose
-import com.white.label.weather.ui.theme.BkgDrawablesRes
-import com.white.label.weather.ui.theme.IconDrawables
-import com.white.label.weather.ui.theme.darkH1TextSize
-import com.white.label.weather.ui.theme.darkH2TextSize
-import com.white.label.weather.ui.theme.darkNormalTextSize
-import com.white.label.weather.ui.theme.darkPrimaryColor
-import com.white.label.weather.ui.theme.darkSecondaryColor
-import com.white.label.weather.ui.theme.darkTertiaryColor
-import com.white.label.weather.ui.theme.darkTextColor
-import com.white.label.weather.ui.theme.lightH1TextSize
-import com.white.label.weather.ui.theme.lightH2TextSize
-import com.white.label.weather.ui.theme.lightNormalTextSize
-import com.white.label.weather.ui.theme.lightPrimaryColor
-import com.white.label.weather.ui.theme.lightSecondaryColor
-import com.white.label.weather.ui.theme.lightTertiaryColor
-import com.white.label.weather.ui.theme.lightTextColor
+import com.white.label.weather.view.ui.label.UiCompose
+import com.white.label.weather.view.ui.theme.BkgDrawablesRes
+import com.white.label.weather.view.ui.theme.IconDrawables
+import com.white.label.weather.view.ui.theme.darkH1TextSize
+import com.white.label.weather.view.ui.theme.darkH2TextSize
+import com.white.label.weather.view.ui.theme.darkNormalTextSize
+import com.white.label.weather.view.ui.theme.darkPrimaryColor
+import com.white.label.weather.view.ui.theme.darkSecondaryColor
+import com.white.label.weather.view.ui.theme.darkTertiaryColor
+import com.white.label.weather.view.ui.theme.darkTextColor
+import com.white.label.weather.view.ui.theme.lightH1TextSize
+import com.white.label.weather.view.ui.theme.lightH2TextSize
+import com.white.label.weather.view.ui.theme.lightNormalTextSize
+import com.white.label.weather.view.ui.theme.lightPrimaryColor
+import com.white.label.weather.view.ui.theme.lightSecondaryColor
+import com.white.label.weather.view.ui.theme.lightTertiaryColor
+import com.white.label.weather.view.ui.theme.lightTextColor
 import com.white.label.weather.util.AppUtil
 import com.white.label.weather.util.Constants
+import com.white.label.weather.view.compose.WeatherState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
 import java.util.Locale
 
 
 class MainViewModel(application: Application) : AndroidViewModel(application) {
     private val mRemoteCall: RemoteCall = RemoteCall.remoteCallInstance
     val uiComposeFlow: MutableStateFlow<UiCompose?> = MutableStateFlow(null)
-    var webApiFlowData: MutableStateFlow<Weather?> = MutableStateFlow(null)
+    var webApiFlowData: MutableStateFlow<WeatherState?> = MutableStateFlow(null)
     var appBgImageResourceFlow: MutableStateFlow<BkgDrawablesRes> =
         MutableStateFlow(BkgDrawablesRes()) // assigning default value to avoid drawing time
     var appIconImageResourceFlow: MutableStateFlow<IconDrawables> =
         MutableStateFlow(IconDrawables()) // assigning default value
     var currentWeatherCodeFlow: MutableStateFlow<Int> = MutableStateFlow(0)
+    private val mutableStateFlow = MutableStateFlow(true)
+    val isLoading = mutableStateFlow.asStateFlow()
+
+    init {
+        viewModelScope.launch {
+            val jsonUiApiString = application.applicationContext.resources.openRawResource(R.raw.app_ui_config)
+                .bufferedReader()
+                .use { it.readText() } // For the time being I am reading jsonui response from res/raw folder, it can be a web api call also
+            parseJsonUi(jsonUiApiString)
+
+        }
+    }
 
 
     /**
      * Decided to parse JsonUI api in ViewModel, just to avoid re-parsing the same data on configuration change.
      */
-    fun parseJsonUi(response: String) {
+    private fun parseJsonUi(response: String) {
         viewModelScope.async(Dispatchers.IO) {
             try {
                 val gson = Gson()
@@ -140,34 +156,41 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
                 }
 
                 uiComposeFlow.value = uiCompose
-
+                mutableStateFlow.value= false
             } catch (th: Throwable) {
                 Log.d("Exception is caught while parsing Json api", th.toString())
+                mutableStateFlow.value= false
             }
 
         }
 
     }
 
-    fun fetWeatherData(latitude: Double, longitude: Double) {
+    fun fetWeatherData(latitude: Double?, longitude: Double?) {
+        webApiFlowData.value = WeatherState(null,true,null)
         viewModelScope.async(Dispatchers.IO) {
-
-            mRemoteCall.weatherApi(object : RemoteCall.Result {
-                override fun onResponse(weather: Weather) {
-                    currentWeatherCodeFlow.value = weather.current_weather.weathercode
-                    AppUtil.getCityName(weather.latitude, weather.longitude) {
-                        if (it != null) {
-                            weather.location = it
+            if (latitude != null) {
+                if (longitude != null) {
+                    mRemoteCall.weatherApi(object : RemoteCall.Result {
+                        override fun onResponse(weather: Weather) {
+                            currentWeatherCodeFlow.value = weather.current_weather.weathercode
+                            AppUtil.getCityName(weather.latitude, weather.longitude) {
+                                if (it != null) {
+                                    weather.location = it
+                                }
+                            }
+                            webApiFlowData.value = WeatherState(weather,false,null)
+                            mutableStateFlow.value = false
                         }
-                    }
-                    webApiFlowData.value = weather
+
+                        override fun onFailure(message: String?) {
+                            webApiFlowData.value = WeatherState(null,false,message)
+                            mutableStateFlow.value = false
+                        }
+
+                    }, latitude, longitude)
                 }
-
-                override fun onFailure() {
-
-                }
-
-            }, latitude, longitude)
+            }
         }
     }
 

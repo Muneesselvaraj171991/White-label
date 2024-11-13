@@ -1,4 +1,4 @@
-package com.white.label.weather.network
+package com.white.label.weather.respository
 
 
 import com.google.gson.Gson
@@ -16,14 +16,14 @@ class RemoteCall private constructor() {
             result.onResponse(mGson.fromJson(data, Weather::class.java))
         } catch (e: Exception) {
             e.printStackTrace()
-            result.onFailure()
+            result.onFailure(e.message)
         }
     }
 
 
     interface Result {
         fun onResponse(weather: Weather)
-        fun onFailure()
+        fun onFailure(message: String?)
     }
 
     companion object {

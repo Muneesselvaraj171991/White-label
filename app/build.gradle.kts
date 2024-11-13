@@ -57,10 +57,12 @@ android {
         }
 
         create("flavour1") {
+            resValue("string","app_name", "WeatherFlavour1")
             dimension = "weather"
             applicationId = "com.white.label.weather.flavour1"
         }
         create("flavour2") {
+            resValue("string","app_name", "WeatherFlavour2")
             dimension = "weather"
             applicationId = "com.white.label.weather.flavour2"
         }
@@ -90,7 +92,7 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-viewmodel:2.8.7")
     implementation("androidx.lifecycle:lifecycle-livedata:2.8.7")
 
-
+    implementation("androidx.core:core-splashscreen:1.0.1")
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")

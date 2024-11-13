@@ -5,10 +5,10 @@ import android.location.Geocoder
 import androidx.compose.ui.graphics.Color
 import androidx.core.graphics.toColorInt
 import com.white.label.weather.MainApplication
-import com.white.label.weather.ui.label.BgImage
-import com.white.label.weather.ui.label.Icons
-import com.white.label.weather.ui.theme.BkgDrawablesRes
-import com.white.label.weather.ui.theme.IconDrawables
+import com.white.label.weather.view.ui.label.BgImage
+import com.white.label.weather.view.ui.label.Icons
+import com.white.label.weather.view.ui.theme.BkgDrawablesRes
+import com.white.label.weather.view.ui.theme.IconDrawables
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date

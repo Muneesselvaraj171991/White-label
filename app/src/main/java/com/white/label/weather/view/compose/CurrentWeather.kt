@@ -1,4 +1,4 @@
-package com.white.label.weather.view
+package com.white.label.weather.view.compose
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -6,20 +6,18 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.white.label.weather.ui.theme.h1TextSize
-import com.white.label.weather.ui.theme.h2TextSize
-import com.white.label.weather.ui.theme.normalTextSize
-import com.white.label.weather.ui.theme.textColor
+import com.white.label.weather.model.Weather
+import com.white.label.weather.view.ui.theme.h1TextSize
+import com.white.label.weather.view.ui.theme.h2TextSize
+import com.white.label.weather.view.ui.theme.normalTextSize
+import com.white.label.weather.view.ui.theme.textColor
 import com.white.label.weather.util.AppUtil
-import com.white.label.weather.viewModel.MainViewModel
 
 
 @Composable
-fun CurrentWeatherScreen(viewModel: MainViewModel) {
+fun CurrentWeatherScreen(weather: Weather?) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -29,8 +27,7 @@ fun CurrentWeatherScreen(viewModel: MainViewModel) {
         horizontalAlignment = Alignment.CenterHorizontally,
 
         ) {
-        val weatherApi by viewModel.webApiFlowData.collectAsStateWithLifecycle()
-        weatherApi?.let {
+       weather?.let {
             Text(
                 text = it.location,
                 fontSize = h2TextSize,

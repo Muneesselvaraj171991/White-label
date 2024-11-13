@@ -2,4 +2,6 @@
     <string name="app_name">White-label</string>
     <string name="banner_hourly_title"> Hourly prediction for today</string>
     <string name="banner_days_title"> Weather predictions for 7 upcoming days</string>
+    <string name="no_internet_connection"> No Internet Connection</string>
+
 </resources>

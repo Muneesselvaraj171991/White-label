@@ -1,4 +1,4 @@
-package com.white.label.weather.network
+package com.white.label.weather.respository
 
 import android.content.Context
 import android.net.ConnectivityManager

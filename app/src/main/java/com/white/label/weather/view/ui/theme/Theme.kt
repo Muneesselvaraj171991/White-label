@@ -1,4 +1,4 @@
-package com.white.label.weather.ui.theme
+package com.white.label.weather.view.ui.theme
 
 import android.app.Activity
 import androidx.compose.foundation.isSystemInDarkTheme

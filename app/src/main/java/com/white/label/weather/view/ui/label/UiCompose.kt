@@ -1,4 +1,4 @@
-package com.white.label.weather.ui.label
+package com.white.label.weather.view.ui.label
 
 data class UiCompose(
     val mainScreen: MainScreen? = MainScreen(),

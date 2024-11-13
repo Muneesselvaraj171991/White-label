@@ -1,4 +1,4 @@
-package com.white.label.weather.view
+package com.white.label.weather.view.compose
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
@@ -27,20 +27,21 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.rememberAsyncImagePainter
 import com.example.white_label.R
-import com.white.label.weather.ui.theme.h2TextSize
-import com.white.label.weather.ui.theme.normalTextSize
-import com.white.label.weather.ui.theme.textColor
+import com.white.label.weather.model.Weather
+import com.white.label.weather.view.ui.theme.h2TextSize
+import com.white.label.weather.view.ui.theme.normalTextSize
+import com.white.label.weather.view.ui.theme.textColor
 import com.white.label.weather.util.AppUtil
 import com.white.label.weather.util.Constants
 import com.white.label.weather.viewModel.MainViewModel
 
 
 @Composable
-fun DaysPredictionList(viewModel: MainViewModel, bgColor: Color, bannerTitle: String?) {
+fun DaysPredictionList(viewModel: MainViewModel,weather: Weather?, bgColor: Color?, bannerTitle: String?) {
     Card(
         shape = RoundedCornerShape(dimensionResource(id = R.dimen.dp_8)),
         colors = CardDefaults.cardColors(
-            containerColor = bgColor,
+            containerColor = bgColor!!,
         ),
         modifier = Modifier
             .fillMaxWidth()
@@ -49,11 +50,10 @@ fun DaysPredictionList(viewModel: MainViewModel, bgColor: Color, bannerTitle: St
 
 
         ) {
-        val weatherApi by viewModel.webApiFlowData.collectAsStateWithLifecycle()
         val appIcon by viewModel.appIconImageResourceFlow.collectAsStateWithLifecycle()
         val dimen8 = dimensionResource(id = R.dimen.dp_8)
 
-        weatherApi?.let {
+        weather?.let {
             Column(
                 modifier = Modifier
                     .fillMaxWidth()

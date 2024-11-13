@@ -2,72 +2,62 @@ package com.white.label.weather
 
 import android.Manifest
 import android.content.pm.PackageManager
+import android.location.Location
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
-import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarDuration
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.Text
 import androidx.compose.material3.darkColorScheme
+import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.paint
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.unit.sp
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.style.TextAlign
 import androidx.core.app.ActivityCompat
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import coil.compose.rememberAsyncImagePainter
-import com.white.label.weather.ui.theme.MyApplicationTheme
 import com.example.white_label.R
+import com.white.label.weather.view.ui.theme.MyApplicationTheme
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
-import com.white.label.weather.ui.theme.darkH1TextSize
-import com.white.label.weather.ui.theme.darkH2TextSize
-import com.white.label.weather.ui.theme.darkNormalTextSize
-import com.white.label.weather.ui.theme.darkPrimaryColor
-import com.white.label.weather.ui.theme.darkSecondaryColor
-import com.white.label.weather.ui.theme.darkTertiaryColor
-import com.white.label.weather.ui.theme.darkTextColor
-import com.white.label.weather.ui.theme.h1TextSize
-import com.white.label.weather.ui.theme.h2TextSize
-import com.white.label.weather.ui.theme.lightH1TextSize
-import com.white.label.weather.ui.theme.lightH2TextSize
-import com.white.label.weather.ui.theme.lightNormalTextSize
-import com.white.label.weather.ui.theme.lightPrimaryColor
-import com.white.label.weather.ui.theme.lightSecondaryColor
-import com.white.label.weather.ui.theme.lightTertiaryColor
-import com.white.label.weather.ui.theme.lightTextColor
-import com.white.label.weather.ui.theme.normalTextSize
-import com.white.label.weather.ui.theme.textColor
-import com.white.label.weather.util.AppUtil
-import com.white.label.weather.util.Constants.Companion.BANNER_TYPE_CURRENT_WEATHER
-import com.white.label.weather.util.Constants.Companion.BANNER_TYPE_DAY_PREDICTION
-import com.white.label.weather.util.Constants.Companion.BANNER_TYPE_PREDICTION_LIST
-import com.white.label.weather.util.Constants.Companion.IMG_TYPE_DRAWABLE
-import com.white.label.weather.view.CurrentWeatherScreen
-import com.white.label.weather.view.DayPredictionScreen
-import com.white.label.weather.view.DaysPredictionList
+import com.white.label.weather.respository.CheckInternetConnection
+import com.white.label.weather.view.ui.theme.darkPrimaryColor
+import com.white.label.weather.view.ui.theme.darkSecondaryColor
+import com.white.label.weather.view.ui.theme.darkTertiaryColor
+import com.white.label.weather.view.ui.theme.lightPrimaryColor
+import com.white.label.weather.view.ui.theme.lightSecondaryColor
+import com.white.label.weather.view.ui.theme.lightTertiaryColor
+import com.white.label.weather.view.compose.MainScreen
 import com.white.label.weather.viewModel.MainViewModel
+import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
     private lateinit var permissionLauncher: ActivityResultLauncher<Array<String>>
     private val viewModel: MainViewModel by viewModels()
     private lateinit var fusedLocationClient: FusedLocationProviderClient
+    private var mCurrentLocation: Location? = null
     override fun onCreate(savedInstanceState: Bundle?) {
+        val splashScreen = installSplashScreen()
         super.onCreate(savedInstanceState)
-
+        splashScreen.setKeepOnScreenCondition { viewModel.isLoading.value }
+        val networkConnection = CheckInternetConnection(this@MainActivity)
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(applicationContext)
-
-        val jsonUiApiString = resources.openRawResource(R.raw.app_ui_config)
-            .bufferedReader()
-            .use { it.readText() } // For the time being I am reading jsonui response from res/raw folder, it can be a web api call also
-        viewModel.parseJsonUi(jsonUiApiString)
-
         permissionLauncher = registerForActivityResult(
             ActivityResultContracts.RequestMultiplePermissions()
         ) {
@@ -81,75 +71,71 @@ class MainActivity : ComponentActivity() {
         )
 
         setContent {
-            val uiCompose by viewModel.uiComposeFlow.collectAsStateWithLifecycle()
-            uiCompose?.let {
-
-                MyApplicationTheme(
-                    lightThemeColor = darkColorScheme(
-                        primary = lightPrimaryColor,
-                        secondary = lightSecondaryColor,
-                        tertiary = lightTertiaryColor
-                    ),
-                    darkColorScheme(
-                        primary = darkPrimaryColor,
-                        secondary = darkSecondaryColor,
-                        tertiary = darkTertiaryColor
+            val snackbarHostState = remember { SnackbarHostState() }
+            val netWorkConnected = networkConnection.observeAsState().value
+            if (netWorkConnected == false) {
+                val context = LocalContext.current
+                val scope = rememberCoroutineScope()
+                scope.launch {
+                    snackbarHostState.showSnackbar(
+                        message = context.resources.getString(R.string.no_internet_connection),
+                        duration = SnackbarDuration.Short
                     )
-                ) {
-                    val bgImage by viewModel.appBgImageResourceFlow.collectAsStateWithLifecycle()
-                    val currentWeatherCode by viewModel.currentWeatherCodeFlow.collectAsStateWithLifecycle()
-                    Column(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .paint(
-                                if (bgImage.type == IMG_TYPE_DRAWABLE) painterResource(
-                                    id = AppUtil.getBgImageUrl(
-                                        currentWeatherCode,
-                                        bgImage
-                                    )
-                                ) else rememberAsyncImagePainter(
-                                    AppUtil.getBgImageUrl(
-                                        currentWeatherCode,
-                                        bgImage.bgImgUrlResponse!!
-                                    )
-                                ),
-                                contentScale = ContentScale.FillBounds
-                            )
+                }
+            } else {
+                if (mCurrentLocation != null) {
+                    viewModel.fetWeatherData(
+                        mCurrentLocation?.latitude,
+                        mCurrentLocation?.longitude
+                    )
+                } else {
+                    //Purely for testing purpose in emulator when location is not found
+                    viewModel.fetWeatherData(
+                        59.2069783, 17.9066208
+                    )
+
+                }
+            }
+
+            Scaffold(
+                snackbarHost = {
+                    SnackbarHost(
+                        hostState = snackbarHostState
+                    )
+                },
+                modifier = Modifier.fillMaxSize()
+            ) { innerPadding ->
+                val uiCompose by viewModel.uiComposeFlow.collectAsStateWithLifecycle()
+                uiCompose?.let {
+                    MyApplicationTheme(
+                        lightThemeColor = lightColorScheme(
+                            primary = lightPrimaryColor,
+                            secondary = lightSecondaryColor,
+                            tertiary = lightTertiaryColor
+                        ),
+                        darkColorScheme(
+                            primary = darkPrimaryColor,
+                            secondary = darkSecondaryColor,
+                            tertiary = darkTertiaryColor
+                        )
                     ) {
-
-                        if (isSystemInDarkTheme()) {
-                            h1TextSize = darkH1TextSize.sp
-                            h2TextSize = darkH2TextSize.sp
-                            normalTextSize = darkNormalTextSize.sp
-                            textColor = darkTextColor
-
-                        } else {
-                            h1TextSize = lightH1TextSize.sp
-                            h2TextSize = lightH2TextSize.sp
-                            normalTextSize = lightNormalTextSize.sp
-                            textColor = lightTextColor
-
-                        }
-                        for (banner in it.mainScreen?.banners!!) {
-                            val bannerUnit = banner.getBannerUnit()
-                            Row(modifier = Modifier.weight(bannerUnit.weight, true)) {
-                                when (bannerUnit.type) {
-                                    BANNER_TYPE_CURRENT_WEATHER -> CurrentWeatherScreen(
-                                        viewModel
-                                    )
-
-                                    BANNER_TYPE_DAY_PREDICTION -> DayPredictionScreen(
-                                        viewModel,
-                                        bannerUnit.bgColor,
-                                        banner.title
-                                    )
-
-                                    BANNER_TYPE_PREDICTION_LIST -> DaysPredictionList(
-                                        viewModel,
-                                        bannerUnit.bgColor,
-                                        banner.title
-                                    )
-                                }
+                        Box(
+                            modifier = Modifier.fillMaxSize().padding(innerPadding)
+                        ) {
+                            val weatherApi by viewModel.webApiFlowData.collectAsStateWithLifecycle()
+                            MainScreen(weatherApi?.weatherInfo,viewModel, uiCompose)
+                            if(weatherApi?.isLoading == true) {
+                                CircularProgressIndicator(
+                                    modifier = Modifier.align(Alignment.Center)
+                                )
+                            }
+                            weatherApi?.error?.let { error ->
+                                Text(
+                                    text = error,
+                                    color = Color.Red,
+                                    textAlign = TextAlign.Center,
+                                    modifier = Modifier.align(Alignment.Center)
+                                )
                             }
                         }
 
@@ -173,20 +159,13 @@ class MainActivity : ComponentActivity() {
         }
         fusedLocationClient.lastLocation
             .addOnSuccessListener { location ->
-                if (location != null) {
-                    viewModel.fetWeatherData(location.latitude, location.longitude)
-                } else {
-                    //Purely for testing purpose in emulator when location is not found
-                    viewModel.fetWeatherData(59.334591
-                        , 18.063240)
-
-                }
-
+                mCurrentLocation = location
             }
-
     }
-
 }
+
+
+
 
 
 

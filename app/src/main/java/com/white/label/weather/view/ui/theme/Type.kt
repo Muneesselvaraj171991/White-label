@@ -1,4 +1,4 @@
-package com.white.label.weather.ui.theme
+package com.white.label.weather.view.ui.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle
