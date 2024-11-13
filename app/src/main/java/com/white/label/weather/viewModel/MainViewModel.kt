@@ -49,6 +49,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     val isLoading = mutableStateFlow.asStateFlow()
 
     init {
+        Log.d("loaded==","init")
         viewModelScope.launch {
             val jsonUiApiString = application.applicationContext.resources.openRawResource(R.raw.app_ui_config)
                 .bufferedReader()
@@ -68,7 +69,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
                 val uiCompose = gson.fromJson(response, UiCompose::class.java)
                 //parse the theme
                 uiCompose.theme?.light.let {
-                    val lightTheme = uiCompose!!.theme?.light
+                    val lightTheme = uiCompose.theme?.light
                     if (lightTheme != null) {
                         lightPrimaryColor = AppUtil.getColor(lightTheme.primary)
                         lightSecondaryColor = AppUtil.getColor(lightTheme.secondary)
@@ -99,7 +100,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
                 val backgroundDrawables = uiCompose.mainScreen?.drawables?.bgImage
                 backgroundDrawables?.let {
 
-                    if (backgroundDrawables.drawableType!!.lowercase(Locale.ROOT) == Constants.IMG_TYPE_URL) {
+                    if (backgroundDrawables.drawableType?.lowercase(Locale.ROOT) == Constants.IMG_TYPE_URL) {
                         appBgImageResourceFlow.value =
                             BkgDrawablesRes(
                                 type = Constants.IMG_TYPE_URL,
@@ -107,15 +108,15 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
                             )
 
 
-                    } else if (backgroundDrawables.drawableType.lowercase(Locale.ROOT) == Constants.IMG_TYPE_DRAWABLE) {
+                    } else if (backgroundDrawables.drawableType?.lowercase(Locale.ROOT) == Constants.IMG_TYPE_DRAWABLE) {
                         appBgImageResourceFlow.value =
                             BkgDrawablesRes(
                                 type = Constants.IMG_TYPE_DRAWABLE,
-                                bgRaining = AppUtil.getImageId(backgroundDrawables.rainImageSrc!!),
-                                bgCloud = AppUtil.getImageId(backgroundDrawables.cloudImageSrc!!),
-                                bgSnowing = AppUtil.getImageId(backgroundDrawables.snowImageSrc!!),
-                                bgSunny = AppUtil.getImageId(backgroundDrawables.sunnyImageSrc!!),
-                                bgThundar = AppUtil.getImageId(backgroundDrawables.thunderImageSrc!!)
+                                bgRaining = AppUtil.getImageId(backgroundDrawables.rainImageSrc),
+                                bgCloud = AppUtil.getImageId(backgroundDrawables.cloudImageSrc),
+                                bgSnowing = AppUtil.getImageId(backgroundDrawables.snowImageSrc),
+                                bgSunny = AppUtil.getImageId(backgroundDrawables.sunnyImageSrc),
+                                bgThundar = AppUtil.getImageId(backgroundDrawables.thunderImageSrc)
                             )
 
 
@@ -128,7 +129,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
                 //parsing app icons images
                 val iconDrawables = uiCompose.mainScreen?.drawables?.icons
                 iconDrawables?.let {
-                    if (iconDrawables.drawableType!!.lowercase(Locale.ROOT) == Constants.IMG_TYPE_URL) {
+                    if (iconDrawables.drawableType?.lowercase(Locale.ROOT) == Constants.IMG_TYPE_URL) {
                         appIconImageResourceFlow.value =
                             IconDrawables(
                                 type = Constants.IMG_TYPE_URL,
@@ -136,15 +137,15 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
                             )
 
 
-                    } else if (iconDrawables.drawableType.lowercase(Locale.ROOT) == Constants.IMG_TYPE_DRAWABLE) {
+                    } else if (iconDrawables.drawableType?.lowercase(Locale.ROOT) == Constants.IMG_TYPE_DRAWABLE) {
                         appIconImageResourceFlow.value =
                             IconDrawables(
                                 type = Constants.IMG_TYPE_DRAWABLE,
-                                iconRaining = AppUtil.getImageId(iconDrawables.rainImageSrc!!),
-                                iconCloud = AppUtil.getImageId(iconDrawables.cloudImageSrc!!),
-                                iconSnowing = AppUtil.getImageId(iconDrawables.snowImageSrc!!),
-                                iconSunny = AppUtil.getImageId(iconDrawables.sunnyImageSrc!!),
-                                iconThundar = AppUtil.getImageId(iconDrawables.thunderImageSrc!!)
+                                iconRaining = AppUtil.getImageId(iconDrawables.rainImageSrc),
+                                iconCloud = AppUtil.getImageId(iconDrawables.cloudImageSrc),
+                                iconSnowing = AppUtil.getImageId(iconDrawables.snowImageSrc),
+                                iconSunny = AppUtil.getImageId(iconDrawables.sunnyImageSrc),
+                                iconThundar = AppUtil.getImageId(iconDrawables.thunderImageSrc)
                             )
 
 

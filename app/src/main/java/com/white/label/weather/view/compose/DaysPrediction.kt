@@ -105,7 +105,7 @@ fun DaysPredictionList(viewModel: MainViewModel,weather: Weather?, bgColor: Colo
                                 ) else rememberAsyncImagePainter(
                                     AppUtil.getIconImageUrl(
                                         daysPrediction.weathercode[index],
-                                        appIcon.iconImgUrlResponse!!
+                                        appIcon.iconImgUrlResponse
                                     )
                                 ),
                                 contentDescription = "imgSrc"

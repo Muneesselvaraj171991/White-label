@@ -53,7 +53,7 @@ fun MainScreen(weather: Weather?, viewModel: MainViewModel, uiCompose: UiCompose
                     ) else rememberAsyncImagePainter(
                         AppUtil.getBgImageUrl(
                             currentWeatherCode,
-                            bgImage.bgImgUrlResponse!!
+                            bgImage.bgImgUrlResponse
                         )
                     ),
                     contentScale = ContentScale.FillBounds
@@ -74,28 +74,31 @@ fun MainScreen(weather: Weather?, viewModel: MainViewModel, uiCompose: UiCompose
                 textColor = lightTextColor
                 color = lightPrimaryColor
             }
+            val banners = uiCompose?.mainScreen?.banners
+            if (banners != null) {
+                for (banner in banners) {
+                    val bannerUnit = banner.getBannerUnit()
+                    Row(modifier = Modifier.weight(bannerUnit.weight, true)) {
+                        when (bannerUnit.type) {
+                            Constants.BANNER_TYPE_CURRENT_WEATHER -> CurrentWeatherScreen(weather)
 
-            for (banner in uiCompose?.mainScreen?.banners!!) {
-                val bannerUnit = banner.getBannerUnit()
-                Row(modifier = Modifier.weight(bannerUnit.weight, true)) {
-                    when (bannerUnit.type) {
-                        Constants.BANNER_TYPE_CURRENT_WEATHER -> CurrentWeatherScreen(weather)
+                            Constants.BANNER_TYPE_DAY_PREDICTION -> DayPredictionScreen(
+                                viewModel, weather,
+                                color,
+                                banner.title
+                            )
 
-                        Constants.BANNER_TYPE_DAY_PREDICTION -> DayPredictionScreen(
-                            viewModel, weather,
-                            color,
-                            banner.title
-                        )
-
-                        Constants.BANNER_TYPE_PREDICTION_LIST -> DaysPredictionList(
-                            viewModel, weather,
-                            color,
-                            banner.title
-                        )
+                            Constants.BANNER_TYPE_PREDICTION_LIST -> DaysPredictionList(
+                                viewModel, weather,
+                                color,
+                                banner.title
+                            )
+                        }
                     }
                 }
             }
-        }
 
+
+        }
     }
 }
