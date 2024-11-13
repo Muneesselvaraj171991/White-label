@@ -27,7 +27,6 @@ import com.white.label.weather.view.ui.theme.lightTertiaryColor
 import com.white.label.weather.view.ui.theme.lightTextColor
 import com.white.label.weather.util.AppUtil
 import com.white.label.weather.util.Constants
-import com.white.label.weather.view.compose.WeatherState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.cancel
@@ -40,7 +39,7 @@ import java.util.Locale
 class MainViewModel(application: Application) : AndroidViewModel(application) {
     private val mRemoteCall: RemoteCall = RemoteCall.remoteCallInstance
     val uiComposeFlow: MutableStateFlow<UiCompose?> = MutableStateFlow(null)
-    var webApiFlowData: MutableStateFlow<WeatherState?> = MutableStateFlow(null)
+    var webApiFlowData: MutableStateFlow<Weather?> = MutableStateFlow(null)
     var appBgImageResourceFlow: MutableStateFlow<BkgDrawablesRes> =
         MutableStateFlow(BkgDrawablesRes()) // assigning default value to avoid drawing time
     var appIconImageResourceFlow: MutableStateFlow<IconDrawables> =
@@ -64,7 +63,6 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
      * Decided to parse JsonUI api in ViewModel, just to avoid re-parsing the same data on configuration change.
      */
     private fun parseJsonUi(response: String) {
-        viewModelScope.async(Dispatchers.IO) {
             try {
                 val gson = Gson()
                 val uiCompose = gson.fromJson(response, UiCompose::class.java)
@@ -162,12 +160,9 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
                 mutableStateFlow.value= false
             }
 
-        }
-
     }
 
     fun fetWeatherData(latitude: Double?, longitude: Double?) {
-        webApiFlowData.value = WeatherState(null,true,null)
         viewModelScope.async(Dispatchers.IO) {
             if (latitude != null) {
                 if (longitude != null) {
@@ -179,13 +174,11 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
                                     weather.location = it
                                 }
                             }
-                            webApiFlowData.value = WeatherState(weather,false,null)
-                            mutableStateFlow.value = false
+                            webApiFlowData.value = weather
                         }
 
                         override fun onFailure(message: String?) {
-                            webApiFlowData.value = WeatherState(null,false,message)
-                            mutableStateFlow.value = false
+                            webApiFlowData.value = null
                         }
 
                     }, latitude, longitude)

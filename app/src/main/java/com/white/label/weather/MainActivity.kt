@@ -123,20 +123,13 @@ class MainActivity : ComponentActivity() {
                             modifier = Modifier.fillMaxSize().padding(innerPadding)
                         ) {
                             val weatherApi by viewModel.webApiFlowData.collectAsStateWithLifecycle()
-                            MainScreen(weatherApi?.weatherInfo,viewModel, uiCompose)
-                            if(weatherApi?.isLoading == true) {
+                            MainScreen(weatherApi,viewModel, uiCompose)
+                            if(weatherApi == null) {
                                 CircularProgressIndicator(
                                     modifier = Modifier.align(Alignment.Center)
                                 )
                             }
-                            weatherApi?.error?.let { error ->
-                                Text(
-                                    text = error,
-                                    color = Color.Red,
-                                    textAlign = TextAlign.Center,
-                                    modifier = Modifier.align(Alignment.Center)
-                                )
-                            }
+
                         }
 
                     }
