@@ -4,7 +4,6 @@ import android.Manifest
 import android.content.pm.PackageManager
 import android.location.Location
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.result.ActivityResultLauncher
@@ -119,13 +118,17 @@ class MainActivity : ComponentActivity() {
                         )
                     ) {
                         Box(
-                            modifier = Modifier.fillMaxSize().padding(innerPadding)
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .padding(innerPadding)
                         ) {
                             val weatherApi by viewModel.webApiFlowData.collectAsStateWithLifecycle()
-                            MainScreen(weatherApi,viewModel, uiCompose)
-                            if(weatherApi == null) {
+                            MainScreen(weatherApi, viewModel, uiCompose)
+                            if (weatherApi == null) {
                                 CircularProgressIndicator(
-                                    modifier = Modifier.align(Alignment.Center).alpha(0f)
+                                    modifier = Modifier
+                                        .align(Alignment.Center)
+                                        .alpha(0f)
                                 )
                             }
 
@@ -135,11 +138,6 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
-    }
-
-    override fun onResume() {
-        super.onResume()
-        Log.d("loaded==","onResume")
     }
 
     private fun getLastKnownLocation() {
@@ -156,6 +154,12 @@ class MainActivity : ComponentActivity() {
         fusedLocationClient.lastLocation
             .addOnSuccessListener { location ->
                 mCurrentLocation = location
+            }
+            .addOnFailureListener {
+                mCurrentLocation = null
+            }
+            .addOnCanceledListener {
+                mCurrentLocation = null
             }
     }
 }
