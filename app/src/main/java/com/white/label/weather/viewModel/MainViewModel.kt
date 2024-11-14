@@ -28,7 +28,6 @@ import com.white.label.weather.view.ui.theme.lightTextColor
 import com.white.label.weather.util.AppUtil
 import com.white.label.weather.util.Constants
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -49,7 +48,6 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     val isLoading = mutableStateFlow.asStateFlow()
 
     init {
-        Log.d("loaded==","init")
         viewModelScope.launch {
             val jsonUiApiString = application.applicationContext.resources.openRawResource(R.raw.app_ui_config)
                 .bufferedReader()
@@ -164,7 +162,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     fun fetWeatherData(latitude: Double?, longitude: Double?) {
-        viewModelScope.async(Dispatchers.IO) {
+        viewModelScope.launch(Dispatchers.IO) {
             if (latitude != null) {
                 if (longitude != null) {
                     mRemoteCall.weatherApi(object : RemoteCall.Result {
