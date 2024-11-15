@@ -8,6 +8,7 @@ import com.example.white_label.R
 import com.white.label.weather.respository.RemoteCall
 import com.google.gson.Gson
 import com.white.label.weather.model.Weather
+import com.white.label.weather.respository.CheckInternetConnection
 import com.white.label.weather.view.ui.label.UiCompose
 import com.white.label.weather.view.ui.theme.BkgDrawablesRes
 import com.white.label.weather.view.ui.theme.IconDrawables
@@ -51,8 +52,10 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     val mCurrentWeatherCodeFlow = currentWeatherCodeFlow.asStateFlow()
     private val mutableStateFlow = MutableStateFlow(true)
     val isLoading = mutableStateFlow.asStateFlow()
+    var networkConnection : CheckInternetConnection? = null
 
     init {
+        networkConnection = CheckInternetConnection()
         viewModelScope.launch {
             val jsonUiApiString = application.applicationContext.resources.openRawResource(R.raw.app_ui_config)
                 .bufferedReader()

@@ -55,7 +55,6 @@ class MainActivity : ComponentActivity() {
         val splashScreen = installSplashScreen()
         super.onCreate(savedInstanceState)
         splashScreen.setKeepOnScreenCondition { viewModel.isLoading.value }
-        val networkConnection = CheckInternetConnection()
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(applicationContext)
         permissionLauncher = registerForActivityResult(
             ActivityResultContracts.RequestMultiplePermissions()
@@ -71,7 +70,7 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             val snackbarHostState = remember { SnackbarHostState() }
-            val netWorkConnected = networkConnection.observeAsState().value
+            val netWorkConnected = viewModel.networkConnection?.observeAsState()?.value
             if (netWorkConnected == false) {
                 val context = LocalContext.current
                 val scope = rememberCoroutineScope()
