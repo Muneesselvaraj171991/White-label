@@ -6,10 +6,12 @@ import android.net.Network
 import android.net.NetworkCapabilities
 import android.net.NetworkRequest
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import com.white.label.weather.MainApplication
 
-class CheckInternetConnection(context: Context) : LiveData<Boolean>() {
+class CheckInternetConnection : LiveData<Boolean>() {
     private val connectivityManager =
-        context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        MainApplication.appContext.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
 
     private val networkCallbacks = object : ConnectivityManager.NetworkCallback() {
         override fun onAvailable(network: Network) {

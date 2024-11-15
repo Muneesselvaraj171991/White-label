@@ -49,7 +49,7 @@ fun DayPredictionScreen(viewModel: MainViewModel, weather: Weather?,bgColor: Col
             .padding(dimensionResource(id = R.dimen.dp_8))
 
     ) {
-        val appIcon by viewModel.appIconImageResourceFlow.collectAsStateWithLifecycle()
+        val appIcon by viewModel.mAppIconImageResourceFlow.collectAsStateWithLifecycle()
         weather?.let {
             val dimen8 = dimensionResource(id = R.dimen.dp_8)
             Column(

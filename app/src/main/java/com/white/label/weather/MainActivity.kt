@@ -19,6 +19,7 @@ import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.remember
@@ -54,7 +55,7 @@ class MainActivity : ComponentActivity() {
         val splashScreen = installSplashScreen()
         super.onCreate(savedInstanceState)
         splashScreen.setKeepOnScreenCondition { viewModel.isLoading.value }
-        val networkConnection = CheckInternetConnection(this@MainActivity)
+        val networkConnection = CheckInternetConnection()
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(applicationContext)
         permissionLauncher = registerForActivityResult(
             ActivityResultContracts.RequestMultiplePermissions()
@@ -103,7 +104,7 @@ class MainActivity : ComponentActivity() {
                 },
                 modifier = Modifier.fillMaxSize()
             ) { innerPadding ->
-                val uiCompose by viewModel.uiComposeFlow.collectAsStateWithLifecycle()
+                val uiCompose by viewModel.mUiComposeFlow.collectAsStateWithLifecycle()
                 uiCompose?.let {
                     MyApplicationTheme(
                         lightThemeColor = lightColorScheme(
@@ -122,7 +123,7 @@ class MainActivity : ComponentActivity() {
                                 .fillMaxSize()
                                 .padding(innerPadding)
                         ) {
-                            val weatherApi by viewModel.webApiFlowData.collectAsStateWithLifecycle()
+                            val weatherApi by viewModel.mWebApiFlowData.collectAsStateWithLifecycle()
                             MainScreen(weatherApi, viewModel, uiCompose)
                             if (weatherApi == null) {
                                 CircularProgressIndicator(

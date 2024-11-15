@@ -50,7 +50,7 @@ fun DaysPredictionList(viewModel: MainViewModel,weather: Weather?, bgColor: Colo
 
 
         ) {
-        val appIcon by viewModel.appIconImageResourceFlow.collectAsStateWithLifecycle()
+        val appIcon by viewModel.mAppIconImageResourceFlow.collectAsStateWithLifecycle()
         val dimen8 = dimensionResource(id = R.dimen.dp_8)
 
         weather?.let {

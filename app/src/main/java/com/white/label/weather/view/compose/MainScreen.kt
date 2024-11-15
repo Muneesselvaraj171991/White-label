@@ -38,8 +38,8 @@ import com.white.label.weather.viewModel.MainViewModel
 @Composable
 fun MainScreen(weather: Weather?, viewModel: MainViewModel, uiCompose: UiCompose?) {
     var color: Color?
-    val bgImage by viewModel.appBgImageResourceFlow.collectAsStateWithLifecycle()
-    val currentWeatherCode by viewModel.currentWeatherCodeFlow.collectAsStateWithLifecycle()
+    val bgImage by viewModel.mAppBgImageResourceFlow.collectAsStateWithLifecycle()
+    val currentWeatherCode by viewModel.mCurrentWeatherCodeFlow.collectAsStateWithLifecycle()
     weather?.let {
         Column(
             modifier = Modifier

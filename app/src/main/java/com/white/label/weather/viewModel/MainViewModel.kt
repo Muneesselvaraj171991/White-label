@@ -37,13 +37,18 @@ import java.util.Locale
 
 class MainViewModel(application: Application) : AndroidViewModel(application) {
     private val mRemoteCall: RemoteCall = RemoteCall.remoteCallInstance
-    val uiComposeFlow: MutableStateFlow<UiCompose?> = MutableStateFlow(null)
-    var webApiFlowData: MutableStateFlow<Weather?> = MutableStateFlow(null)
-    var appBgImageResourceFlow: MutableStateFlow<BkgDrawablesRes> =
+    private val uiComposeFlow: MutableStateFlow<UiCompose?> = MutableStateFlow(null)
+    val mUiComposeFlow = uiComposeFlow.asStateFlow()
+    private val webApiFlowData: MutableStateFlow<Weather?> = MutableStateFlow(null)
+    val mWebApiFlowData = webApiFlowData.asStateFlow()
+    private val appBgImageResourceFlow: MutableStateFlow<BkgDrawablesRes> =
         MutableStateFlow(BkgDrawablesRes()) // assigning default value to avoid drawing time
-    var appIconImageResourceFlow: MutableStateFlow<IconDrawables> =
+    val mAppBgImageResourceFlow = appBgImageResourceFlow.asStateFlow()
+    private val appIconImageResourceFlow: MutableStateFlow<IconDrawables> =
         MutableStateFlow(IconDrawables()) // assigning default value
-    var currentWeatherCodeFlow: MutableStateFlow<Int> = MutableStateFlow(0)
+    val mAppIconImageResourceFlow = appIconImageResourceFlow.asStateFlow()
+    private val currentWeatherCodeFlow: MutableStateFlow<Int> = MutableStateFlow(0)
+    val mCurrentWeatherCodeFlow = currentWeatherCodeFlow.asStateFlow()
     private val mutableStateFlow = MutableStateFlow(true)
     val isLoading = mutableStateFlow.asStateFlow()
 
